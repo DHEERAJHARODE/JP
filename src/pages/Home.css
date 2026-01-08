@@ -1,27 +1,30 @@
 /* HOME PAGE STYLING */
-
 .home-container {
   font-family: "Poppins", sans-serif;
   color: #333;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* HERO SECTION */
 .hero-section {
   background: linear-gradient(135deg, #1e3a8a, #3b82f6);
-  padding: 80px 20px;
+  padding: 100px 20px; /* Increased padding */
   text-align: center;
   color: white;
+  width: 100%;
 }
 
 .hero-section h1 {
   font-size: 3rem;
   font-weight: 700;
+  margin: 0;
   animation: fadeInDown 1s ease-in-out;
 }
 
 .hero-section p {
   font-size: 1.2rem;
-  margin-top: 10px;
+  margin-top: 15px;
   animation: fadeInUp 1s ease-in-out;
 }
 
@@ -48,12 +51,22 @@
 .services-section {
   padding: 50px 25px;
   text-align: center;
+  background-color: #fff;
 }
 
 .services-section h2 {
   font-size: 2rem;
   font-weight: 600;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
+}
+
+/* Added Grid Layout for Services */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .service-card {
@@ -63,6 +76,10 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   transition: 0.3s ease-in-out;
   border: 1px solid #e5e7eb;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .service-card:hover {
@@ -71,7 +88,8 @@
 }
 
 .service-card img {
-  width: 70px;
+  width: 60px;
+  height: 60px;
   margin-bottom: 15px;
   transition: transform 0.3s ease;
 }
@@ -83,23 +101,21 @@
 .service-card h3 {
   font-size: 1.1rem;
   font-weight: 600;
+  margin: 0;
 }
 
 /* FEATURES SECTION */
 .features-section {
   background: #f8fafc;
   padding: 50px 25px;
-}
-
-.features-section h2 {
-  font-size: 2rem;
-  font-weight: 600;
-  margin-bottom: 20px;
+  text-align: center;
 }
 
 .features-section ul {
   list-style: none;
   padding: 0;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .features-section li {
@@ -109,11 +125,14 @@
   border-radius: 8px;
   box-shadow: 0 3px 10px rgba(0,0,0,0.05);
   font-size: 1rem;
+  text-align: left;
 }
 
 /* CTA FOOTER */
 .cta-footer {
   padding: 50px 25px;
+  text-align: center;
+  background-color: #fff;
 }
 
 .cta-footer button {
@@ -137,23 +156,11 @@
 
 /* ANIMATIONS */
 @keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
