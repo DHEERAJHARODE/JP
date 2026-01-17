@@ -1,48 +1,65 @@
 :root {
-  /* Brand Colors */
-  --primary-color: #2563eb;       /* Royal Blue */
-  --primary-hover: #1d4ed8;       /* Darker Blue */
-  --secondary-color: #64748b;     /* Gray */
-  --success-color: #16a34a;       /* Green */
-  --background-color: #f8f9fa;    /* Light Gray Background */
-  --card-bg: #ffffff;
-  --text-dark: #1e293b;
-  --text-light: #64748b;
-  --border-color: #e2e8f0;
+  /* Modern Professional Palette */
+  --primary: #2563eb;        /* Royal Blue */
+  --primary-hover: #1d4ed8;
+  --secondary: #64748b;      /* Slate Gray */
+  --accent: #f59e0b;         /* Amber for highlights */
   
-  /* Spacing & Radius */
-  --radius: 8px;
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --bg-body: #f8fafc;        /* Very light blue-gray */
+  --bg-card: #ffffff;
+  
+  --text-main: #0f172a;      /* Dark Slate */
+  --text-muted: #64748b;
+  
+  --border: #e2e8f0;
+  --radius: 12px;            /* Modern rounded corners */
+  --shadow-sm: 0 1px 2px 0rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  
+  --transition: all 0.2s ease-in-out;
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  padding: 0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-dark);
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
 }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-main);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
 }
 
-/* Hyperlinks */
+h1 { font-size: 2.5rem; letter-spacing: -0.02em; }
+h2 { font-size: 2rem; letter-spacing: -0.01em; }
+h3 { font-size: 1.5rem; }
+
+p { margin-bottom: 1rem; color: var(--text-muted); }
+
+/* Links */
 a {
-  color: var(--primary-color);
+  color: var(--primary);
   text-decoration: none;
   font-weight: 500;
+  transition: var(--transition);
 }
 
-a:hover {
-  text-decoration: underline;
+a:hover { color: var(--primary-hover); }
+
+/* Mobile Typography adjustment */
+@media (max-width: 768px) {
+  h1 {fz: 2rem; }
+  h2 { font-size: 1.75rem; }
 }

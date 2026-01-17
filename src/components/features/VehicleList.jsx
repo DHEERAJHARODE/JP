@@ -1,32 +1,32 @@
 import React from "react";
-import Card from "../common/Card";
-import Button from "../common/Button";
+import "../../App.css"; 
+// Note: You can replace the emoji with actual <img> tags of trucks later
 
 const VehicleList = ({ vehicles = [], onSelect }) => {
   return (
-    <div style={styles.grid}>
+    <div className="grid-2">
       {vehicles.map((vehicle) => (
-        <Card key={vehicle.id} style={styles.card}>
-          <h3>{vehicle.name}</h3>
-          <p>Capacity: {vehicle.capacity}</p>
-          <p>Price per km: ₹{vehicle.pricePerKm}</p>
-          <Button onClick={() => onSelect(vehicle)}>Select</Button>
-        </Card>
+        <div 
+          key={vehicle.id} 
+          className="modern-card" 
+          style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            cursor: 'pointer'
+          }}
+          onClick={() => onSelect(vehicle)}
+        >
+          <div>
+            <h3 style={{ marginBottom: '4px' }}>{vehicle.name}</h3>
+            <p style={{ fontSize: '0.85rem', marginBottom: '8px' }}>Capacity: {vehicle.capacity}</p>
+            <span className="badge badge-blue">₹{vehicle.pricePerKm}/km</span>
+          </div>
+          <div style={{ fontSize: '3rem' }}>🚚</div> 
+        </div>
       ))}
     </div>
   );
-};
-
-const styles = {
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "16px",
-  },
-  card: {
-    textAlign: "center",
-    padding: "20px",
-  },
 };
 
 export default VehicleList;
