@@ -1,7 +1,19 @@
-import { Navigate } from "react-router-dom";
+import React from "react";
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
-export default function PublicRoute({ children }) {
-  const isAuthenticated = localStorage.getItem("authToken");
+const PublicRoute = () => {
+  const { user, loading } = useAuth();
 
-  return !isAuthenticated ? children : <Navigate to="/dashboard" replace />;
-}
+  if (loading) {
+    return (
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
+        Loading...
+      </div>
+    );
+  }
+
+  return user ? <Navigate to="/dashboard" replace /> : <Outlet />;
+};
+
+export default PublicRoute;
