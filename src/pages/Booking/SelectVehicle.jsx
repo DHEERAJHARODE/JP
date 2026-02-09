@@ -3,32 +3,34 @@ import { useNavigate } from "react-router-dom";
 import { useBookingContext } from "../../context/BookingContext";
 import VehicleList from "../../components/features/VehicleList";
 import { VEHICLES } from "../../utils/constants";
-import { useMaps } from "../../hooks/useMaps"; // Step 1: Hook Import
+import { useMaps } from "../../hooks/useMaps"; 
 
 const SelectVehicle = () => {
-  const { vehicle, setVehicle, pickup, drop } = useBookingContext();
+  // 1. Get setDistance from context to save the result globally
+  const { vehicle, setVehicle, pickup, drop, setDistance: setGlobalDistance } = useBookingContext();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
-  // Step 2: Distance Calculation Logic
+  // 2. Use the hook to calculate actual road distance
   const { calculateDistance, distance, loading } = useMaps();
 
   useEffect(() => {
-    // Page load hote hi distance calculate karein
+    // Calculate distance when page loads
     if (pickup && drop) {
-      calculateDistance(pickup, drop);
+      calculateDistance(pickup, drop).then((calculatedDist) => {
+        // 3. Save the calculated distance to the Global Context
+        if (calculatedDist) {
+          setGlobalDistance(calculatedDist);
+        }
+      });
     }
-  }, [pickup, drop]); // Dependency array ensures calculation runs when locations change
+  }, [pickup, drop]); 
 
   const handleNext = () => {
     if (!vehicle) {
       setError("Please select a vehicle type to proceed.");
       return;
     }
-    // Optional: Save total price to context if needed specifically
-    // const totalPrice = Math.round(distance * vehicle.pricePerKm);
-    // setBookingDetails(prev => ({ ...prev, price: totalPrice }));
-    
     navigate("/booking/summary");
   };
 
@@ -55,11 +57,8 @@ const SelectVehicle = () => {
           {/* --- LEFT COLUMN: VEHICLE LIST --- */}
           <div style={styles.leftColumn}>
             
-            {/* Route Info Header */}
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <p style={styles.helperText}>
-                Select a vehicle for your load.
-              </p>
+              <p style={styles.helperText}>Select a vehicle for your load.</p>
               {loading ? (
                 <span style={{color: '#2563eb', fontSize: '0.9rem'}}>🔄 Calculating route...</span>
               ) : distance > 0 ? (
@@ -69,12 +68,11 @@ const SelectVehicle = () => {
               ) : null}
             </div>
             
-            {/* The Vehicle List Component */}
             <div style={styles.listWrapper}>
               <VehicleList
                 vehicles={VEHICLES}
                 selectedVehicle={vehicle} 
-                distance={distance} // Pass distance to calculate fare
+                distance={distance} // Pass for dynamic pricing display
                 onSelect={(v) => {
                   setVehicle(v);
                   setError(null);
@@ -82,14 +80,10 @@ const SelectVehicle = () => {
               />
             </div>
 
-            {error && (
-              <div style={styles.errorBox}>
-                ⚠️ {error}
-              </div>
-            )}
+            {error && <div style={styles.errorBox}>⚠️ {error}</div>}
           </div>
 
-          {/* --- RIGHT COLUMN: SUMMARY & HELP --- */}
+          {/* --- RIGHT COLUMN: SUMMARY --- */}
           <div style={styles.rightColumn}>
              <div style={styles.infoCard}>
                 <h3 style={styles.infoTitle}>Estimated Fare</h3>
@@ -107,9 +101,7 @@ const SelectVehicle = () => {
                      Select a vehicle to see the total estimated fare.
                    </p>
                 )}
-
                 <div style={styles.divider}></div>
-
                 <h3 style={styles.infoTitle}>Why ShipEase?</h3>
                 <ul style={styles.benefitList}>
                   <li style={styles.benefitItem}>✓ Transparent Pricing</li>
@@ -120,15 +112,11 @@ const SelectVehicle = () => {
           </div>
         </div>
 
-        {/* --- FOOTER ACTION BAR --- */}
+        {/* --- FOOTER --- */}
         <div style={styles.footerBar}>
-          <button style={styles.backBtn} onClick={handleBack}>
-            &larr; Back
-          </button>
+          <button style={styles.backBtn} onClick={handleBack}>&larr; Back</button>
           <div style={{flex: 1}}></div>
-          <button style={styles.nextBtn} onClick={handleNext}>
-            Proceed to Summary &rarr;
-          </button>
+          <button style={styles.nextBtn} onClick={handleNext}>Proceed to Summary &rarr;</button>
         </div>
 
       </div>
@@ -136,7 +124,7 @@ const SelectVehicle = () => {
   );
 };
 
-// --- STYLES ---
+// Styles (Same as before)
 const styles = {
   pageBackground: { minHeight: "100vh", background: "#f8fafc", padding: "40px 20px 100px 20px", fontFamily: "'Inter', sans-serif" },
   mainContainer: { maxWidth: "1000px", margin: "0 auto" },
