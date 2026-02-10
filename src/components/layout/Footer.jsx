@@ -1,155 +1,115 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../../App.css";
 
 const Footer = () => {
   return (
-    <footer className="footer-section">
-      <div className="page-container">
-        <div className="footer-grid">
-          
-          {/* Column 1: Brand & App Links */}
-          <div className="footer-col">
-            <h3 className="footer-brand">Ship<span style={{color: 'var(--primary)'}}>Ease</span></h3>
-            <p className="footer-desc">
-              India's most reliable intra-city logistics partner. Moving goods, growing businesses.
-            </p>
-            <div className="app-badges">
-              {/* Placeholders for App Store buttons */}
-              <div className="store-badge">Get it on <b>Google Play</b></div>
-              <div className="store-badge">Download on <b>App Store</b></div>
-            </div>
-          </div>
-
-          {/* Column 2: Company */}
-          <div className="footer-col">
-            <h4>Company</h4>
-            <Link to="/about">About Us</Link>
-            <Link to="/careers">Careers</Link>
-            <Link to="/blog">Logistics Blog</Link>
-            <Link to="/press">Press & Media</Link>
-          </div>
-
-          {/* Column 3: Services */}
-          <div className="footer-col">
-            <h4>Services</h4>
-            <Link to="/booking/create">Rent Mini Trucks</Link>
-            <Link to="/services/packers">Packers & Movers</Link>
-            <Link to="/services/enterprise">Enterprise Logistics</Link>
-            <Link to="/services/courier">Two-Wheeler Delivery</Link>
-          </div>
-
-          {/* Column 4: Support */}
-          <div className="footer-col">
-            <h4>Support</h4>
-            <Link to="/contact">Contact Us</Link>
-            <Link to="/privacy">Privacy Policy</Link>
-            <Link to="/terms">Terms of Service</Link>
-            <Link to="/insurance">Goods Insurance</Link>
-          </div>
+    <footer className="footer">
+      <div className="footer-container">
+        
+        {/* Brand Column */}
+        <div className="footer-brand">
+          <h2 className="logo">Ship<span style={{color: '#3b82f6'}}>Ease</span></h2>
+          <p>India's most trusted logistics partner. Move anything, anywhere, anytime.</p>
         </div>
 
-        <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} ShipEase Logistics Pvt Ltd. All rights reserved.</p>
-          <div className="social-links">
-            <span>cX</span>
-            <span>in</span>
-            <span>fb</span>
-            <span>ig</span>
-          </div>
+        {/* Links Column 1 */}
+        <div className="footer-links">
+           <h4>Company</h4>
+           <Link to="/about">About Us</Link>
+           <Link to="/careers">Careers</Link>
+           <Link to="/blog">Blog</Link>
         </div>
+
+        {/* Links Column 2 */}
+        <div className="footer-links">
+           <h4>Product</h4>
+           <Link to="/booking/create">Book Truck</Link>
+           <Link to="/enterprise">Enterprise</Link>
+           <Link to="/pricing">Pricing</Link>
+        </div>
+
+        {/* Links Column 3 */}
+        <div className="footer-links">
+           <h4>Support</h4>
+           <Link to="/help">Help Center</Link>
+           <Link to="/contact">Contact Us</Link>
+           <Link to="/terms">Terms & Privacy</Link>
+        </div>
+
+      </div>
+      
+      <div className="footer-bottom">
+         <p>&copy; {new Date().getFullYear()} ShipEase Logistics Pvt Ltd. All rights reserved.</p>
       </div>
 
       <style>{`
-        .footer-section {
-          background-color: #0f172a; /* Dark Slate - Industry Standard */
-          color: #94a3b8;
-          padding-top: 60px;
-          border-top: 1px solid #1e293b;
-          font-size: 0.9rem;
+        .footer {
+           background: #0f172a;
+           color: white;
+           padding: 60px 0 20px 0;
+           margin-top: auto;
         }
 
-        .footer-grid {
-          display: grid;
-          grid-template-columns: 1.5fr 1fr 1fr 1fr;
-          gap: 40px;
-          padding-bottom: 40px;
+        .footer-container {
+           max-width: 1200px;
+           margin: 0 auto;
+           padding: 0 20px;
+           display: grid;
+           grid-template-columns: 2fr 1fr 1fr 1fr;
+           gap: 40px;
+           margin-bottom: 40px;
         }
 
-        .footer-brand {
-          color: white;
-          font-size: 1.5rem;
-          margin-bottom: 16px;
+        .footer-brand .logo {
+           font-size: 1.8rem;
+           margin-bottom: 16px;
+           color: white;
         }
 
-        .footer-desc {
-          margin-bottom: 24px;
-          line-height: 1.6;
-          max-width: 300px;
+        .footer-brand p {
+           color: #94a3b8;
+           line-height: 1.6;
+           max-width: 300px;
         }
 
-        .footer-col h4 {
-          color: white;
-          font-size: 1rem;
-          margin-bottom: 20px;
-          font-weight: 600;
+        .footer-links {
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
         }
 
-        .footer-col a {
-          display: block;
-          color: #94a3b8;
-          margin-bottom: 12px;
-          text-decoration: none;
-          transition: color 0.2s;
+        .footer-links h4 {
+           color: white;
+           font-size: 1.1rem;
+           margin-bottom: 8px;
         }
 
-        .footer-col a:hover {
-          color: var(--primary); /* Blue hover */
-          transform: translateX(4px);
+        .footer-links a {
+           color: #94a3b8;
+           text-decoration: none;
+           transition: color 0.2s;
+           font-size: 0.95rem;
         }
 
-        /* App Store Badges (Simulated) */
-        .app-badges {
-          display: flex;
-          gap: 10px;
-          flex-wrap: wrap;
-        }
-        .store-badge {
-          background: #1e293b;
-          color: white;
-          padding: 8px 14px;
-          border-radius: 6px;
-          font-size: 0.75rem;
-          border: 1px solid #334155;
-          cursor: pointer;
-        }
+        .footer-links a:hover { color: #3b82f6; }
 
         .footer-bottom {
-          border-top: 1px solid #1e293b;
-          padding: 24px 0;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+           text-align: center;
+           border-top: 1px solid #1e293b;
+           padding-top: 20px;
+           color: #64748b;
+           font-size: 0.85rem;
         }
 
-        .social-links {
-          display: flex;
-          gap: 16px;
-          font-weight: bold;
-          letter-spacing: 1px;
-        }
-
-        /* Responsive Footer */
+        /* Mobile */
         @media (max-width: 768px) {
-          .footer-grid {
-            grid-template-columns: 1fr;
-            gap: 30px;
-          }
-          .footer-bottom {
-            flex-direction: column;
-            gap: 16px;
-            text-align: center;
-          }
+           .footer-container {
+              grid-template-columns: 1fr;
+              gap: 30px;
+              text-align: center;
+           }
+           
+           .footer-brand p { margin: 0 auto; }
         }
       `}</style>
     </footer>

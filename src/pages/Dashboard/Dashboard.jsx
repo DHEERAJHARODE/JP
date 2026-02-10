@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { getUserBookings } from "../../services/bookingService";
 import { useNavigate } from "react-router-dom";
+import "./Dashboard.css"; 
 import "../../App.css";
 
 const Dashboard = () => {
@@ -11,109 +12,111 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
+      if (!user?.uid) return;
+      
       const { bookings } = await getUserBookings(user.uid);
       if (bookings) {
         const spent = bookings.reduce((acc, curr) => acc + (curr.price || 0), 0);
         setStats({
           total: bookings.length,
           spent: spent,
-          active: bookings.length > 0 ? 1 : 0, // Mock logic for active
+          active: bookings.length > 0 ? 1 : 0,
         });
       }
     };
     fetchStats();
   }, [user]);
 
+  const username = user?.email ? user.email.split('@')[0] : "Member";
+
   return (
-    <div className="page-container">
-      <div style={{ marginBottom: "32px" }}>
-        <h2 style={{ fontSize: "1.8rem" }}>Dashboard Overview</h2>
-        <p style={{ color: "var(--text-muted)" }}>Welcome back, {user.email?.split('@')[0]}</p>
-      </div>
-
-      {/* --- STATS WIDGETS --- */}
-      <div className="bento-grid" style={{ marginTop: "0", marginBottom: "40px" }}>
+    <div className="dashboard-wrapper">
+      <div className="dashboard-content">
         
-        {/* Widget 1: Total Bookings */}
-        <div className="glass-card" style={styles.widget}>
-          <div style={styles.iconBlue}>📦</div>
-          <div>
-            <div style={styles.widgetLabel}>Total Bookings</div>
-            <div style={styles.widgetValue}>{stats.total}</div>
+        {/* --- HEADER SECTION --- */}
+        <header className="dash-header">
+          <div className="header-text">
+            <h1>Hello, <span className="highlight-text">{username}</span> 👋</h1>
+            <p className="subtitle">Here is your shipment overview.</p>
           </div>
-        </div>
-
-        {/* Widget 2: Total Spent */}
-        <div className="glass-card" style={styles.widget}>
-          <div style={styles.iconGreen}>₹</div>
-          <div>
-            <div style={styles.widgetLabel}>Total Spent</div>
-            <div style={styles.widgetValue}>₹{stats.spent.toLocaleString()}</div>
+          <div className="header-action">
+             {/* Date or small profile badge could go here */}
+             <span className="date-badge">{new Date().toLocaleDateString()}</span>
           </div>
-        </div>
+        </header>
 
-        {/* Widget 3: Quick Action */}
-        <div 
-          className="glass-card" 
-          style={{ ...styles.widget, cursor: "pointer", border: "1px solid var(--primary)" }}
-          onClick={() => navigate("/booking/create")}
-        >
-          <div style={styles.iconOrange}>+</div>
-          <div>
-            <div style={styles.widgetLabel}>New Request</div>
-            <div style={{ ...styles.widgetValue, fontSize: "1.2rem", color: "var(--primary)" }}>
-              Book Now
+        {/* --- MAIN GRID --- */}
+        <section className="stats-grid">
+          
+          {/* Card 1: Total Orders */}
+          <div className="stat-card">
+            <div className="icon-box blue-gradient">
+              <span className="icon">📦</span>
+            </div>
+            <div className="stat-details">
+              <h3>Total Orders</h3>
+              <p className="stat-number">{stats.total}</p>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Recent Activity Section */}
-      <div className="glass-card">
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
-          <h3>Recent Activity</h3>
-          <button className="btn btn-secondary" style={{ padding: "6px 12px", fontSize: "0.85rem" }} onClick={() => navigate("/dashboard/orders")}>
-            View All
-          </button>
-        </div>
-        <p style={{ color: "var(--text-muted)", fontStyle: "italic" }}>
-          Check your "My Orders" tab for detailed shipment tracking.
-        </p>
-      </div>
+          {/* Card 2: Total Spent */}
+          <div className="stat-card">
+            <div className="icon-box green-gradient">
+              <span className="icon">₹</span>
+            </div>
+            <div className="stat-details">
+              <h3>Total Spent</h3>
+              <p className="stat-number">₹{stats.spent.toLocaleString()}</p>
+            </div>
+          </div>
 
+          {/* Card 3: Call To Action (Book Now) */}
+          <div 
+            className="stat-card cta-card" 
+            onClick={() => navigate("/booking/create")}
+          >
+            <div className="icon-box orange-gradient">
+              <span className="icon">🚀</span>
+            </div>
+            <div className="stat-details">
+              <h3>Send Package</h3>
+              <p className="cta-text">Book New Shipment &rarr;</p>
+            </div>
+          </div>
+
+        </section>
+
+        {/* --- RECENT ACTIVITY SECTION --- */}
+        <section className="activity-section">
+          <div className="section-header">
+            <h2>Recent Activity</h2>
+            <button className="text-btn" onClick={() => navigate("/dashboard/orders")}>
+              View All Orders
+            </button>
+          </div>
+          
+          <div className="activity-card">
+             {/* If stats.total is 0, show empty state, else show a teaser */}
+             {stats.total === 0 ? (
+               <div className="empty-state">
+                 <div className="empty-icon">📮</div>
+                 <p>No shipments yet. Start your first delivery today!</p>
+               </div>
+             ) : (
+               <div className="info-state">
+                 <p>Visit <strong>My Orders</strong> to track your {stats.total} active shipments.</p>
+                 <div className="progress-bar">
+                    <div className="progress-fill" style={{width: '60%'}}></div>
+                 </div>
+                 <span className="status-text">Tracking Active</span>
+               </div>
+             )}
+          </div>
+        </section>
+
+      </div>
     </div>
   );
-};
-
-const styles = {
-  widget: {
-    display: "flex",
-    alignItems: "center",
-    gap: "20px",
-    padding: "24px",
-  },
-  widgetLabel: {
-    fontSize: "0.9rem",
-    color: "var(--text-muted)",
-    marginBottom: "4px",
-  },
-  widgetValue: {
-    fontSize: "1.8rem",
-    fontWeight: "700",
-    color: "var(--text-main)",
-  },
-  iconBlue: {
-    width: "50px", height: "50px", borderRadius: "12px", background: "#eff6ff", color: "#2563eb",
-    display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem"
-  },
-  iconGreen: {
-    width: "50px", height: "50px", borderRadius: "12px", background: "#f0fdf4", color: "#16a34a",
-    display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem"
-  },
-  iconOrange: {
-    width: "50px", height: "50px", borderRadius: "12px", background: "#fff7ed", color: "#ea580c",
-    display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem"
-  }
 };
 
 export default Dashboard;

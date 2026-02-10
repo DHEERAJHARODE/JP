@@ -1,226 +1,418 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useBookingContext } from "../../context/BookingContext";
-import { createBooking } from "../../services/bookingService";
 import { useAuth } from "../../hooks/useAuth";
-import { formatCurrency } from "../../utils/helpers";
+import { createBooking } from "../../services/bookingService"; // We will mock this or use real
+import Button from "../../components/common/Button";
 
 const BookingSummary = () => {
-  const { pickup, drop, vehicle, distance, resetBooking } = useBookingContext();
+  const { pickup, drop, vehicle, distance } = useBookingContext();
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const finalPrice = (vehicle && distance) ? Math.round(distance * vehicle.pricePerKm) : 0;
+  // Price Calculation Logic
+  const baseFare = distance * (vehicle?.pricePerKm || 0);
+  const tax = baseFare * 0.18; // 18% GST
+  const serviceFee = 50; // Fixed Platform Fee
+  const totalAmount = Math.round(baseFare + tax + serviceFee);
 
-  const handleConfirm = async () => {
-    if (!pickup || !drop || !vehicle) {
-      alert("Missing booking details!");
-      return;
-    }
-
+  const handleConfirmBooking = async () => {
+    // Real app would send data to backend here
     const bookingData = {
-      userId: user?.uid || "guest",
       pickup,
       drop,
-      vehicle: vehicle.name,
-      distance,
-      price: finalPrice,
-      status: 'Confirmed',
-      createdAt: new Date().toISOString(),
+      vehicle: vehicle?.name,
+      price: totalAmount,
+      date: new Date().toISOString(),
+      userId: user?.uid,
+      status: "Pending" // Initial status
     };
 
     try {
-      const { id, error } = await createBooking(bookingData);
-      if (error) {
-        alert("Error creating booking: " + error);
-      } else {
-        alert("Booking Confirmed! ID: " + id);
-        resetBooking();
-        navigate("/dashboard");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Something went wrong.");
+      // Mock API Call
+      console.log("Booking Confirmed:", bookingData);
+      
+      // Navigate to Success Page (or Dashboard with success message)
+      alert("Booking Confirmed Successfully! 🚚"); // Temporary feedback
+      navigate("/dashboard");
+      
+    } catch (error) {
+      console.error("Booking failed:", error);
+      alert("Something went wrong. Please try again.");
     }
   };
 
+  if (!vehicle || !pickup) {
+    return (
+      <div style={{padding: '40px', textAlign: 'center'}}>
+        <h2>No booking details found.</h2>
+        <button onClick={() => navigate("/booking/create")}>Start New Booking</button>
+      </div>
+    );
+  }
+
   return (
-    <div style={styles.pageBackground}>
-      <div style={styles.mainContainer}>
+    <div className="summary-page">
+      <div className="page-container">
         
         {/* --- HEADER --- */}
-        <div style={styles.headerSection}>
-           <div style={styles.progressBarContainer}>
-             <div style={styles.progressBarFill}></div>
-           </div>
-           <div style={styles.stepIndicator}>
-             <span style={styles.stepText}>Step 3 of 3</span>
-             <h2 style={styles.pageTitle}>Review & Confirm</h2>
-           </div>
+        <div className="summary-header">
+           <button onClick={() => navigate(-1)} className="back-link">← Back</button>
+           <h1 className="page-title">Review & Pay</h1>
         </div>
 
-        <div style={styles.contentGrid}>
-          {/* --- LEFT COLUMN --- */}
-          <div style={styles.leftColumn}>
+        <div className="content-grid">
+          
+          {/* --- LEFT: ORDER DETAILS --- */}
+          <div className="details-section">
             
-            {/* Location Card */}
-            <div style={styles.card}>
-              <h3 style={styles.cardTitle}>📍 Route Details</h3>
-              <div style={styles.row}>
-                 <span style={styles.label}>Pickup</span>
-                 <span style={styles.value}>{pickup}</span>
+            {/* Route Card */}
+            <div className="card route-card">
+              <h3 className="card-title">Route Details</h3>
+              <div className="route-timeline">
+                <div className="timeline-item">
+                   <div className="dot green-dot"></div>
+                   <div className="address-box">
+                      <span className="label">Pickup</span>
+                      <p className="address-text">{pickup}</p>
+                   </div>
+                </div>
+                <div className="timeline-line"></div>
+                <div className="timeline-item">
+                   <div className="dot red-dot"></div>
+                   <div className="address-box">
+                      <span className="label">Dropoff</span>
+                      <p className="address-text">{drop}</p>
+                   </div>
+                </div>
               </div>
-              <div style={styles.connector}></div>
-              <div style={styles.row}>
-                 <span style={styles.label}>Drop</span>
-                 <span style={styles.value}>{drop}</span>
-              </div>
-              <div style={{...styles.row, marginTop: '15px', paddingTop: '15px', borderTop: '1px dashed #e2e8f0'}}>
-                 <span style={styles.label}>Total Distance</span>
-                 <span style={styles.highlightValue}>{distance} km</span>
+              <div className="distance-badge">
+                 🛣️ Total Distance: <strong>{distance} km</strong>
               </div>
             </div>
 
-            {/* Vehicle Card (Updated Image Style) */}
-            <div style={styles.card}>
-              <h3 style={styles.cardTitle}>🚚 Vehicle Details</h3>
-              {vehicle ? (
-                <>
-                  {/* --- Full Width Image Section --- */}
-                  <div style={styles.vehicleImageContainer}>
-                    {vehicle.image ? (
-                        <img 
-                            src={vehicle.image} 
-                            alt={vehicle.name} 
-                            style={styles.vehicleImage}
-                        />
-                    ) : (
-                        <span style={{ fontSize: '3rem' }}>🚚</span>
-                    )}
+            {/* Vehicle Card */}
+            <div className="card vehicle-card">
+               <h3 className="card-title">Vehicle Selected</h3>
+               <div className="vehicle-info">
+                  <div className="vehicle-icon-box">
+                     {/* Placeholder for Vehicle Image/Icon */}
+                     <span style={{fontSize: '2rem'}}>🚚</span>
                   </div>
-                  {/* ------------------------------- */}
+                  <div>
+                    <h4 className="vehicle-name">{vehicle.name}</h4>
+                    <p className="vehicle-desc">{vehicle.size} • {vehicle.capacity}</p>
+                  </div>
+                  <button className="change-btn" onClick={() => navigate("/booking/vehicle")}>Change</button>
+               </div>
+            </div>
 
-                  <div style={styles.row}>
-                    <span style={styles.label}>Type</span>
-                    <span style={styles.value}>{vehicle.name}</span>
-                  </div>
-                  <div style={styles.row}>
-                    <span style={styles.label}>Capacity</span>
-                    <span style={styles.value}>{vehicle.capacity}</span>
-                  </div>
-                  <div style={styles.row}>
-                    <span style={styles.label}>Size</span>
-                    <span style={styles.value}>{vehicle.size}</span>
-                  </div>
-                  <div style={styles.row}>
-                    <span style={styles.label}>Rate</span>
-                    <span style={styles.value}>₹{vehicle.pricePerKm} / km</span>
-                  </div>
-                </>
-              ) : (
-                <p style={{color: '#ef4444'}}>No vehicle selected</p>
-              )}
+            {/* Payment Method (Mock) */}
+            <div className="card payment-card">
+               <h3 className="card-title">Payment Method</h3>
+               <div className="payment-option">
+                  <div className="radio-selected"></div>
+                  <span>Cash on Delivery / UPI upon arrival</span>
+               </div>
+               {/* Add more payment options here later */}
             </div>
 
           </div>
 
-          {/* --- RIGHT COLUMN --- */}
-          <div style={styles.rightColumn}>
-            <div style={styles.priceCard}>
-              <h3 style={styles.cardTitle}>Payment Summary</h3>
+          {/* --- RIGHT: BILL SUMMARY --- */}
+          <div className="bill-section">
+            <div className="bill-card">
+              <h3 className="card-title">Fare Breakdown</h3>
               
-              <div style={styles.priceRow}>
-                <span>Base Fare (Est.)</span>
-                <span>{formatCurrency ? formatCurrency(finalPrice) : `₹${finalPrice}`}</span>
+              <div className="bill-row">
+                 <span>Trip Fare ({distance} km)</span>
+                 <span>₹{Math.round(baseFare)}</span>
               </div>
-              <div style={styles.priceRow}>
-                <span>Taxes & Fees</span>
-                <span>₹0</span>
+              <div className="bill-row">
+                 <span>Service Fee</span>
+                 <span>₹{serviceFee}</span>
               </div>
-              
-              <div style={styles.divider}></div>
-              
-              <div style={styles.totalRow}>
-                <span>Total</span>
-                <span>{formatCurrency ? formatCurrency(finalPrice) : `₹${finalPrice}`}</span>
+              <div className="bill-row">
+                 <span>GST (18%)</span>
+                 <span>₹{Math.round(tax)}</span>
               </div>
 
-              <div style={{marginTop: '20px', fontSize: '0.85rem', color: '#64748b', lineHeight: '1.5'}}>
-                * Payment will be collected at the time of pickup or drop. 
+              <div className="divider"></div>
+
+              <div className="total-row">
+                 <span>Total to Pay</span>
+                 <span className="total-amount">₹{totalAmount}</span>
               </div>
+
+              <button className="confirm-btn" onClick={handleConfirmBooking}>
+                 Confirm Booking
+              </button>
+              
+              <p className="terms-text">
+                By booking, you agree to ShipEase's Terms of Service and Privacy Policy.
+              </p>
             </div>
           </div>
-        </div>
 
-        {/* --- FOOTER --- */}
-        <div style={styles.footerBar}>
-           <button style={styles.backBtn} onClick={() => navigate(-1)}>Back</button>
-           <div style={{flex: 1}}></div>
-           <button style={styles.confirmBtn} onClick={handleConfirm}>
-             Confirm Booking &rarr;
-           </button>
         </div>
-
       </div>
+
+      <style>{`
+        .summary-page {
+          min-height: 100vh;
+          background: #f8fafc;
+          padding: 40px 20px 80px 20px;
+          font-family: 'Inter', sans-serif;
+        }
+
+        .page-container {
+          max-width: 1000px;
+          margin: 0 auto;
+        }
+
+        .summary-header {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          margin-bottom: 32px;
+        }
+
+        .back-link {
+          background: none;
+          border: none;
+          color: #64748b;
+          font-weight: 600;
+          cursor: pointer;
+          font-size: 1rem;
+        }
+
+        .page-title {
+          font-size: 2rem;
+          font-weight: 800;
+          color: #0f172a;
+          margin: 0;
+        }
+
+        /* --- Grid Layout --- */
+        .content-grid {
+          display: grid;
+          grid-template-columns: 1fr 380px; /* Left takes space, Right fixed */
+          gap: 32px;
+          align-items: start;
+        }
+
+        /* --- Cards Generic --- */
+        .card {
+          background: white;
+          border-radius: 16px;
+          border: 1px solid #e2e8f0;
+          padding: 24px;
+          margin-bottom: 24px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .card-title {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #0f172a;
+          margin-bottom: 20px;
+        }
+
+        /* --- Route Timeline --- */
+        .route-timeline {
+          position: relative;
+          padding-left: 10px;
+        }
+
+        .timeline-item {
+          display: flex;
+          gap: 16px;
+          position: relative;
+          z-index: 2;
+        }
+
+        .timeline-line {
+          position: absolute;
+          left: 14px; /* Align with dots center */
+          top: 10px;
+          bottom: 30px;
+          width: 2px;
+          background: #e2e8f0;
+          z-index: 1;
+        }
+
+        .dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          margin-top: 6px;
+          flex-shrink: 0;
+          outline: 4px solid white; /* Creates gap around dot */
+        }
+        .green-dot { background: #22c55e; }
+        .red-dot { background: #ef4444; }
+
+        .address-box {
+          margin-bottom: 24px;
+        }
+
+        .label {
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          color: #94a3b8;
+          font-weight: 600;
+          display: block;
+          margin-bottom: 4px;
+        }
+
+        .address-text {
+          color: #334155;
+          font-size: 1rem;
+          line-height: 1.5;
+        }
+
+        .distance-badge {
+          background: #eff6ff;
+          color: #1d4ed8;
+          padding: 10px;
+          border-radius: 8px;
+          text-align: center;
+          font-size: 0.9rem;
+          margin-top: 10px;
+        }
+
+        /* --- Vehicle Info --- */
+        .vehicle-info {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .vehicle-icon-box {
+          width: 60px;
+          height: 60px;
+          background: #f1f5f9;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .vehicle-name { margin: 0; font-size: 1.1rem; color: #0f172a; }
+        .vehicle-desc { margin: 4px 0 0 0; color: #64748b; font-size: 0.9rem; }
+        
+        .change-btn {
+          margin-left: auto;
+          color: #2563eb;
+          background: none;
+          border: none;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        /* --- Payment --- */
+        .payment-option {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 16px;
+          border: 1px solid #2563eb;
+          background: #eff6ff;
+          border-radius: 12px;
+          color: #1e40af;
+          font-weight: 500;
+        }
+        .radio-selected {
+          width: 16px; height: 16px;
+          border: 5px solid #2563eb;
+          border-radius: 50%;
+          background: white;
+        }
+
+        /* --- Bill Section (Right) --- */
+        .bill-card {
+          background: white;
+          border-radius: 16px;
+          border: 1px solid #e2e8f0;
+          padding: 30px;
+          position: sticky;
+          top: 20px;
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+        }
+
+        .bill-row {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 12px;
+          color: #64748b;
+          font-size: 0.95rem;
+        }
+
+        .divider {
+          height: 1px;
+          background: #e2e8f0;
+          margin: 20px 0;
+        }
+
+        .total-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+        }
+
+        .total-row span {
+          font-size: 1.1rem;
+          font-weight: 700;
+          color: #0f172a;
+        }
+
+        .total-amount {
+          font-size: 1.8rem !important;
+          color: #2563eb !important;
+        }
+
+        .confirm-btn {
+          width: 100%;
+          padding: 16px;
+          background: #2563eb;
+          color: white;
+          border: none;
+          border-radius: 12px;
+          font-size: 1.1rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background 0.2s;
+          box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+
+        .confirm-btn:hover {
+          background: #1d4ed8;
+          transform: translateY(-1px);
+        }
+
+        .terms-text {
+          font-size: 0.75rem;
+          color: #94a3b8;
+          text-align: center;
+          margin-top: 16px;
+          line-height: 1.4;
+        }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 850px) {
+          .content-grid {
+             grid-template-columns: 1fr; /* Stack vertically on tablet/mobile */
+          }
+          
+          .bill-card {
+             position: relative; /* Remove sticky on mobile */
+             top: 0;
+          }
+        }
+      `}</style>
     </div>
   );
-};
-
-// --- Styles ---
-const styles = {
-  pageBackground: { minHeight: "100vh", background: "#f8fafc", padding: "40px 20px 100px 20px", fontFamily: "'Inter', sans-serif" },
-  mainContainer: { maxWidth: "1000px", margin: "0 auto" },
-  
-  headerSection: { marginBottom: "40px" },
-  progressBarContainer: { width: "100%", height: "6px", background: "#e2e8f0", borderRadius: "3px", marginBottom: "20px", overflow: "hidden" },
-  progressBarFill: { width: "100%", height: "100%", background: "#22c55e", borderRadius: "3px" }, 
-  stepIndicator: { display: "flex", flexDirection: "column", gap: "8px" },
-  stepText: { textTransform: "uppercase", fontSize: "0.75rem", letterSpacing: "1px", fontWeight: "600", color: "#64748b" },
-  pageTitle: { fontSize: "2rem", fontWeight: "800", color: "#0f172a", margin: 0 },
-
-  contentGrid: { display: "grid", gridTemplateColumns: "1fr 350px", gap: "40px", alignItems: "start" },
-  leftColumn: { display: "flex", flexDirection: "column", gap: "20px" },
-  rightColumn: { display: "block" },
-
-  card: { background: "white", padding: "24px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 2px 4px rgba(0,0,0,0.02)" },
-  cardTitle: { fontSize: "1.1rem", fontWeight: "700", marginBottom: "16px", color: "#0f172a" },
-
-  // --- NEW IMAGE STYLES (Matching VehicleList) ---
-  vehicleImageContainer: {
-    width: '100%',
-    height: '220px', // फिक्स्ड हाइट ताकि सब एक जैसे दिखें
-    background: '#f1f5f9',
-    borderRadius: '16px', // बॉर्डर रेडियस
-    overflow: 'hidden', // इमेज बाहर न निकले
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: '20px',
-    border: '1px solid #e2e8f0',
-    padding: 0 // ✅ नो पैडिंग
-  },
-  vehicleImage: {
-    width: '100%',
-    height: '100%',
-    objectFit: 'cover', // ✅ फुल साइज (नो मार्जिन)
-    display: 'block'
-  },
-  // -----------------------------------------------
-  
-  row: { display: "flex", justifyContent: "space-between", marginBottom: "12px" },
-  label: { color: "#64748b", fontWeight: "500" },
-  value: { color: "#334155", fontWeight: "600", textAlign: "right", maxWidth: "60%" },
-  highlightValue: { color: "#2563eb", fontWeight: "700" },
-  connector: { width: "2px", height: "15px", background: "#e2e8f0", margin: "-5px 0 8px 5px" },
-
-  priceCard: { background: "white", padding: "24px", borderRadius: "16px", border: "1px solid #e2e8f0", position: "sticky", top: "20px" },
-  priceRow: { display: "flex", justifyContent: "space-between", marginBottom: "12px", color: "#64748b", fontSize: "0.95rem" },
-  divider: { height: "1px", background: "#e2e8f0", margin: "15px 0" },
-  totalRow: { display: "flex", justifyContent: "space-between", fontSize: "1.5rem", fontWeight: "800", color: "#0f172a" },
-
-  footerBar: { position: "fixed", bottom: 0, left: 0, width: "100%", background: "white", padding: "20px 40px", boxShadow: "0 -4px 20px rgba(0,0,0,0.05)", display: "flex", alignItems: "center", zIndex: 100, borderTop: "1px solid #e2e8f0" },
-  confirmBtn: { padding: "14px 32px", background: "#16a34a", color: "white", border: "none", borderRadius: "50px", fontSize: "1rem", fontWeight: "600", cursor: "pointer", boxShadow: "0 4px 10px rgba(22, 163, 74, 0.2)" },
-  backBtn: { padding: "14px 24px", background: "transparent", color: "#64748b", border: "none", borderRadius: "50px", fontSize: "1rem", fontWeight: "600", cursor: "pointer" },
 };
 
 export default BookingSummary;

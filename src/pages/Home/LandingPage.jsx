@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
-// Note: Ensure App.css contains the CSS provided below the component
 import "../../App.css";
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [scrolled, setScrolled] = useState(false);
-
-  // Parallax effect for blobs
+  
+  // Mouse parallax effect state
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 20,
-        y: (e.clientY / window.innerHeight) * 20,
-      });
+      // Limit movement on mobile for performance
+      if (window.innerWidth > 768) {
+        setMousePos({
+          x: (e.clientX / window.innerWidth) * 20,
+          y: (e.clientY / window.innerHeight) * 20,
+        });
+      }
     };
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
@@ -32,37 +33,210 @@ const LandingPage = () => {
   };
 
   return (
-    <div style={styles.pageWrapper}>
+    <div className="landing-wrapper">
+      {/* Internal Styles for Mobile Responsiveness */}
+      <style>{`
+        .landing-wrapper {
+          font-family: 'Inter', sans-serif;
+          overflow-x: hidden;
+          position: relative;
+          background: #ffffff;
+          width: 100%;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-section {
+          position: relative;
+          z-index: 1;
+          padding: 120px 0 80px 0;
+          min-height: 90vh;
+          display: flex;
+          align-items: center;
+        }
+
+        .hero-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 50px;
+          padding: 0 20px;
+          max-width: 1200px;
+          margin: 0 auto;
+          width: 100%;
+        }
+
+        .hero-content {
+          flex: 1;
+          min-width: 300px; /* Adjusted for smaller screens */
+        }
+
+        .hero-title {
+          font-size: clamp(2.5rem, 5vw, 4.5rem); /* Responsive font size */
+          font-weight: 900;
+          line-height: 1.1;
+          color: #0f172a;
+          margin-bottom: 24px;
+          letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+          font-size: 1.125rem;
+          color: #64748b;
+          line-height: 1.6;
+          margin-bottom: 40px;
+          max-width: 540px;
+        }
+
+        .btn-group {
+          display: flex;
+          gap: 16px;
+          margin-bottom: 48px;
+          flex-wrap: wrap; /* Buttons stack on very small screens */
+        }
+
+        .stats-row {
+          display: flex;
+          align-items: center;
+          gap: 30px;
+          padding-top: 30px;
+          border-top: 1px solid #f1f5f9;
+        }
+
+        /* --- VISUALS --- */
+        .hero-visual {
+          flex: 1;
+          min-width: 300px;
+          position: relative;
+          display: flex;
+          justify-content: center;
+          perspective: 1000px;
+        }
+
+        .phone-mockup {
+          width: 300px;
+          height: 600px;
+          background: #0f172a;
+          border-radius: 40px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), inset 0 0 0 8px #334155;
+          padding: 12px;
+          position: relative;
+          transform: rotateY(-15deg) rotateX(10deg);
+          transition: transform 0.5s ease;
+          max-width: 90vw; /* Prevent overflow on mobile */
+          height: auto;
+          aspect-ratio: 1/2;
+        }
+
+        /* --- FEATURES --- */
+        .features-section {
+          padding: 80px 20px;
+          background: #fff;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        .grid-container {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 30px;
+          margin-top: 40px;
+        }
+
+        .feature-card {
+          background: #ffffff;
+          border-radius: 24px;
+          padding: 30px;
+          border: 1px solid #f1f5f9;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          cursor: pointer;
+        }
+
+        .feature-card:hover {
+          transform: translateY(-8px);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+          border-color: #3b82f6;
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+          .hero-section {
+            padding: 100px 0 60px 0;
+            text-align: center; /* Center align text on mobile */
+          }
+          
+          .hero-container {
+            flex-direction: column;
+            gap: 40px;
+          }
+
+          .hero-content {
+            width: 100%;
+          }
+
+          .hero-subtitle {
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 1rem;
+          }
+
+          .btn-group {
+            justify-content: center;
+          }
+          
+          .stats-row {
+            justify-content: center;
+            gap: 20px;
+          }
+
+          .hero-visual {
+            width: 100%;
+            transform: scale(0.9); /* Slightly smaller phone on mobile */
+            margin-top: 20px;
+          }
+          
+          .phone-mockup {
+            transform: rotateY(0deg) rotateX(0deg); /* Flatten 3D effect on mobile for better view */
+          }
+
+          .blob {
+            opacity: 0.3; /* Reduce distraction on mobile */
+          }
+
+          .cta-title {
+            font-size: 1.8rem !important;
+          }
+        }
+      `}</style>
+
       {/* Background Mesh Gradient */}
       <div style={styles.backgroundMesh}>
-        <div style={{...styles.blob, top: "-10%", left: "-10%", background: "radial-gradient(circle, #6366f1 0%, transparent 70%)", transform: `translate(${mousePos.x * -1}px, ${mousePos.y * -1}px)`}}></div>
-        <div style={{...styles.blob, bottom: "20%", right: "-10%", background: "radial-gradient(circle, #ec4899 0%, transparent 70%)", transform: `translate(${mousePos.x}px, ${mousePos.y}px)`}}></div>
+        <div className="blob" style={{...styles.blob, top: "-10%", left: "-10%", background: "radial-gradient(circle, #6366f1 0%, transparent 70%)", transform: `translate(${mousePos.x * -1}px, ${mousePos.y * -1}px)`}}></div>
+        <div className="blob" style={{...styles.blob, bottom: "20%", right: "-10%", background: "radial-gradient(circle, #ec4899 0%, transparent 70%)", transform: `translate(${mousePos.x}px, ${mousePos.y}px)`}}></div>
       </div>
 
       {/* --- HERO SECTION --- */}
-      <section style={styles.heroSection}>
-        <div className="page-container" style={styles.heroContainer}>
+      <section className="hero-section">
+        <div className="hero-container">
           
           {/* Left Content */}
-          <div style={styles.heroContent}>
+          <div className="hero-content">
             <div className="fade-in-up" style={{animationDelay: '0.1s'}}>
               <span style={styles.pillBadge}>✨ #1 Logistics App in India</span>
             </div>
             
-            {/* FIXED: Merged duplicate style props */}
-            <h1 className="fade-in-up" style={{...styles.heroTitle, animationDelay: '0.2s'}}>
+            <h1 className="hero-title fade-in-up" style={{animationDelay: '0.2s'}}>
               Move Anything, <br />
               <span style={styles.gradientText}>Anywhere, Instantly.</span>
             </h1>
             
-            {/* FIXED: Merged duplicate style props */}
-            <p className="fade-in-up" style={{...styles.heroSubtitle, animationDelay: '0.3s'}}>
+            <p className="hero-subtitle fade-in-up" style={{animationDelay: '0.3s'}}>
               Experience the future of logistics with ShipEase. Connect with verified drivers, 
               track goods in real-time, and save up to 30% on every shipment.
             </p>
 
-            {/* FIXED: Merged duplicate style props */}
-            <div className="fade-in-up" style={{...styles.buttonGroup, animationDelay: '0.4s'}}>
+            <div className="btn-group fade-in-up" style={{animationDelay: '0.4s'}}>
               <button className="primary-btn" onClick={() => handleNav("/booking/create")}>
                 Book Now &rarr;
               </button>
@@ -71,8 +245,7 @@ const LandingPage = () => {
               </button>
             </div>
 
-            {/* FIXED: Merged duplicate style props */}
-            <div className="fade-in-up" style={{...styles.statsRow, animationDelay: '0.5s'}}>
+            <div className="stats-row fade-in-up" style={{animationDelay: '0.5s'}}>
               <div style={styles.statItem}>
                 <h4 style={styles.statNum}>50k+</h4>
                 <span style={styles.statLabel}>Deliveries</span>
@@ -90,9 +263,9 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Right Visual (CSS Phone Mockup) */}
-          <div style={styles.heroVisual} className="float-animation">
-            <div style={styles.phoneMockup}>
+          {/* Right Visual (Phone Mockup) */}
+          <div className="hero-visual float-animation">
+            <div className="phone-mockup">
               <div style={styles.phoneNotch}></div>
               <div style={styles.phoneScreen}>
                 {/* Mockup Header */}
@@ -104,7 +277,7 @@ const LandingPage = () => {
                   </div>
                 </div>
                 {/* Mockup Map Area */}
-                <div style={{height: '120px', background: '#e0f2fe', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <div style={{height: '140px', background: '#e0f2fe', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                   <div style={{fontSize: '2rem'}}>🗺️</div>
                   <div style={{position: 'absolute', bottom: '10px', right: '10px', background: 'white', padding: '5px 10px', borderRadius: '10px', fontSize: '0.7rem', boxShadow: '0 2px 5px rgba(0,0,0,0.1)'}}>
                     Driver is 5 min away
@@ -126,12 +299,12 @@ const LandingPage = () => {
                         <div style={{fontSize: '0.65rem', color: '#64748b'}}>Tata Ace • MH 12 AB 1234</div>
                       </div>
                    </div>
-                   <button style={{width: '100%', padding: '10px', marginTop: '10px', background: '#3b82f6', border: 'none', borderRadius: '8px', color: 'white', fontSize: '0.8rem'}}>Track Live</button>
+                   <button style={{width: '100%', padding: '10px', marginTop: '10px', background: '#3b82f6', border: 'none', borderRadius: '8px', color: 'white', fontSize: '0.8rem', fontWeight: '600'}}>Track Live</button>
                 </div>
               </div>
             </div>
             
-            {/* Floating Elements around phone */}
+            {/* Floating Elements - Hidden on very small screens via CSS if needed, currently shown */}
             <div className="glass-card bounce-card" style={styles.floatCard1}>
               <span>⚡ Fast</span>
             </div>
@@ -143,17 +316,17 @@ const LandingPage = () => {
       </section>
 
       {/* --- FEATURES GRID --- */}
-      <section className="page-container" style={styles.featuresSection}>
-        <div style={{textAlign: "center", marginBottom: "60px"}}>
+      <section className="features-section">
+        <div style={{textAlign: "center", marginBottom: "40px"}}>
           <h2 style={styles.sectionTitle}>Everything you need to <span style={{color: '#3b82f6'}}>grow</span></h2>
           <p style={styles.sectionSubtitle}>
-            Powerful features designed to streamline your logistics operations from start to finish.
+            Powerful features designed to streamline your logistics operations.
           </p>
         </div>
 
-        <div style={styles.gridContainer}>
+        <div className="grid-container">
           {/* Card 1 */}
-          <div style={styles.featureCard} onClick={() => handleNav("/booking/create")}>
+          <div className="feature-card" onClick={() => handleNav("/booking/create")}>
             <div style={{...styles.iconBox, background: '#eff6ff', color: '#3b82f6'}}>📍</div>
             <h3 style={styles.cardTitle}>Instant Booking</h3>
             <p style={styles.cardText}>
@@ -162,7 +335,7 @@ const LandingPage = () => {
           </div>
 
           {/* Card 2 */}
-          <div style={styles.featureCard} onClick={() => handleNav("/dashboard/orders")}>
+          <div className="feature-card" onClick={() => handleNav("/dashboard/orders")}>
             <div style={{...styles.iconBox, background: '#f0fdf4', color: '#22c55e'}}>📡</div>
             <h3 style={styles.cardTitle}>Live Tracking</h3>
             <p style={styles.cardText}>
@@ -171,7 +344,7 @@ const LandingPage = () => {
           </div>
 
           {/* Card 3 */}
-          <div style={styles.featureCard} onClick={() => handleNav("/booking/vehicle")}>
+          <div className="feature-card" onClick={() => handleNav("/booking/vehicle")}>
             <div style={{...styles.iconBox, background: '#fff7ed', color: '#f97316'}}>🚛</div>
             <h3 style={styles.cardTitle}>Diverse Fleet</h3>
             <p style={styles.cardText}>
@@ -184,8 +357,8 @@ const LandingPage = () => {
       {/* --- CALL TO ACTION --- */}
       <section style={styles.ctaSection}>
         <div className="page-container" style={styles.ctaContainer}>
-            <h2 style={{color: 'white', fontSize: '2.5rem', marginBottom: '20px'}}>Ready to move?</h2>
-            <p style={{color: '#e0e7ff', marginBottom: '30px', maxWidth: '600px'}}>Join thousands of businesses who trust ShipEase for their daily logistics.</p>
+            <h2 className="cta-title" style={{color: 'white', fontSize: '2.5rem', marginBottom: '20px', lineHeight: '1.2'}}>Ready to move?</h2>
+            <p style={{color: '#e0e7ff', marginBottom: '30px', maxWidth: '600px', fontSize: '1.1rem'}}>Join thousands of businesses who trust ShipEase for their daily logistics.</p>
             <button style={styles.ctaButton} onClick={() => handleNav("/booking/create")}>Get Started for Free</button>
         </div>
       </section>
@@ -194,20 +367,14 @@ const LandingPage = () => {
   );
 };
 
-// --- STYLES OBJECT ---
+// --- STATIC STYLES (Helpers) ---
 const styles = {
-  pageWrapper: {
-    fontFamily: "'Inter', sans-serif",
-    overflowX: "hidden",
-    position: "relative",
-    background: "#ffffff",
-  },
   backgroundMesh: {
     position: "absolute",
     top: 0,
     left: 0,
     width: "100%",
-    height: "100vh",
+    height: "100%",
     zIndex: 0,
     overflow: "hidden",
     pointerEvents: "none",
@@ -221,25 +388,6 @@ const styles = {
     opacity: 0.4,
     transition: "transform 0.2s ease-out",
   },
-  heroSection: {
-    position: "relative",
-    zIndex: 1,
-    padding: "120px 0 80px 0",
-    minHeight: "90vh",
-    display: "flex",
-    alignItems: "center",
-  },
-  heroContainer: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    flexWrap: "wrap",
-    gap: "50px",
-  },
-  heroContent: {
-    flex: 1,
-    minWidth: "350px",
-  },
   pillBadge: {
     display: "inline-block",
     padding: "8px 16px",
@@ -251,37 +399,10 @@ const styles = {
     marginBottom: "24px",
     border: "1px solid rgba(59, 130, 246, 0.2)",
   },
-  heroTitle: {
-    fontSize: "clamp(3rem, 6vw, 4.5rem)",
-    fontWeight: "900",
-    lineHeight: "1.1",
-    color: "#0f172a",
-    marginBottom: "24px",
-    letterSpacing: "-1px",
-  },
   gradientText: {
     background: "linear-gradient(135deg, #2563eb 0%, #9333ea 100%)",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
-  },
-  heroSubtitle: {
-    fontSize: "1.25rem",
-    color: "#64748b",
-    lineHeight: "1.6",
-    marginBottom: "40px",
-    maxWidth: "540px",
-  },
-  buttonGroup: {
-    display: "flex",
-    gap: "16px",
-    marginBottom: "48px",
-  },
-  statsRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "30px",
-    paddingTop: "30px",
-    borderTop: "1px solid #f1f5f9",
   },
   statItem: {
     display: "flex",
@@ -302,27 +423,6 @@ const styles = {
     width: "1px",
     height: "40px",
     background: "#cbd5e1",
-  },
-  
-  // Visual / Phone Mockup
-  heroVisual: {
-    flex: 1,
-    minWidth: "350px",
-    position: "relative",
-    display: "flex",
-    justifyContent: "center",
-    perspective: "1000px",
-  },
-  phoneMockup: {
-    width: "300px",
-    height: "600px",
-    background: "#0f172a",
-    borderRadius: "40px",
-    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25), inset 0 0 0 8px #334155",
-    padding: "12px",
-    position: "relative",
-    transform: "rotateY(-15deg) rotateX(10deg)",
-    transition: "transform 0.5s ease",
   },
   phoneScreen: {
     width: "100%",
@@ -377,6 +477,7 @@ const styles = {
     fontWeight: "bold",
     color: "#0f172a",
     border: "1px solid rgba(255,255,255,0.5)",
+    zIndex: 2,
   },
   floatCard2: {
     position: "absolute",
@@ -390,17 +491,10 @@ const styles = {
     fontWeight: "bold",
     color: "#0f172a",
     border: "1px solid rgba(255,255,255,0.5)",
-  },
-
-  // Features Section
-  featuresSection: {
-    padding: "100px 0",
-    position: "relative",
     zIndex: 2,
-    background: "#ffffff",
   },
   sectionTitle: {
-    fontSize: "2.5rem",
+    fontSize: "clamp(2rem, 4vw, 2.5rem)",
     fontWeight: "800",
     color: "#0f172a",
     marginBottom: "16px",
@@ -410,23 +504,6 @@ const styles = {
     color: "#64748b",
     maxWidth: "600px",
     margin: "0 auto",
-  },
-  gridContainer: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-    gap: "40px",
-    padding: "20px",
-  },
-  featureCard: {
-    background: "#ffffff",
-    borderRadius: "24px",
-    padding: "40px",
-    border: "1px solid #f1f5f9",
-    boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)",
-    transition: "all 0.3s ease",
-    cursor: "pointer",
-    position: "relative",
-    overflow: "hidden",
   },
   iconBox: {
     width: "60px",
@@ -449,10 +526,8 @@ const styles = {
     color: "#64748b",
     lineHeight: "1.6",
   },
-
-  // CTA Section
   ctaSection: {
-    padding: "100px 0",
+    padding: "80px 20px",
     background: "linear-gradient(135deg, #1e40af 0%, #7c3aed 100%)",
     textAlign: "center",
   },

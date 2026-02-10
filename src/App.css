@@ -234,3 +234,8 @@ div[style*="featureCard"]:hover {
   text-transform: uppercase;
 }
 .badge-blue { background: #eff6ff; color: var(--primary); }
+/* src/App.css के अंत में */
+
+.page-container, .auth-page, .profile-container, .orders-page {
+  padding-top: 20px; /* थोड़ा और स्पेस ताकि अच्छा दिखे */
+}
