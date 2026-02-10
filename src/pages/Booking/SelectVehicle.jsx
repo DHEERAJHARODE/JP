@@ -57,8 +57,11 @@ const SelectVehicle = () => {
           {/* --- LEFT COLUMN: VEHICLE LIST --- */}
           <div style={styles.leftColumn}>
             
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-              <p style={styles.helperText}>Select a vehicle for your load.</p>
+            {/* Header with Distance Info */}
+            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px'}}>
+              <p style={styles.helperText}>
+                Choose a vehicle that fits your load size & dimensions.
+              </p>
               {loading ? (
                 <span style={{color: '#2563eb', fontSize: '0.9rem'}}>🔄 Calculating route...</span>
               ) : distance > 0 ? (
@@ -68,11 +71,13 @@ const SelectVehicle = () => {
               ) : null}
             </div>
             
+            {/* The Vehicle List Component */}
+            {/* Note: Removed the white 'listWrapper' box to let cards float on the background */}
             <div style={styles.listWrapper}>
               <VehicleList
                 vehicles={VEHICLES}
                 selectedVehicle={vehicle} 
-                distance={distance} // Pass for dynamic pricing display
+                distance={distance} // Pass distance for dynamic pricing
                 onSelect={(v) => {
                   setVehicle(v);
                   setError(null);
@@ -124,7 +129,7 @@ const SelectVehicle = () => {
   );
 };
 
-// Styles (Same as before)
+// --- STYLES ---
 const styles = {
   pageBackground: { minHeight: "100vh", background: "#f8fafc", padding: "40px 20px 100px 20px", fontFamily: "'Inter', sans-serif" },
   mainContainer: { maxWidth: "1000px", margin: "0 auto" },
@@ -138,7 +143,13 @@ const styles = {
   leftColumn: { display: "flex", flexDirection: "column", gap: "20px" },
   rightColumn: { display: "block" },
   helperText: { fontSize: "1rem", color: "#64748b" },
-  listWrapper: { background: "white", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.05)", overflow: "hidden", padding: "10px" },
+  
+  // Updated List Wrapper to be transparent
+  listWrapper: { 
+    marginTop: "10px",
+    overflow: "visible" 
+  },
+  
   errorBox: { padding: "16px", background: "#fef2f2", border: "1px solid #fee2e2", borderRadius: "12px", color: "#ef4444", fontWeight: "500", display: "flex", alignItems: "center", gap: "8px" },
   infoCard: { background: "white", padding: "24px", borderRadius: "16px", border: "1px solid #e2e8f0", position: "sticky", top: "20px" },
   infoTitle: { fontSize: "1.1rem", fontWeight: "700", marginBottom: "10px", color: "#0f172a" },
