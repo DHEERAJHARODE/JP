@@ -40,7 +40,6 @@ const Dashboard = () => {
             <p className="subtitle">Here is your shipment overview.</p>
           </div>
           <div className="header-action">
-             {/* Date or small profile badge could go here */}
              <span className="date-badge">{new Date().toLocaleDateString()}</span>
           </div>
         </header>
@@ -48,8 +47,12 @@ const Dashboard = () => {
         {/* --- MAIN GRID --- */}
         <section className="stats-grid">
           
-          {/* Card 1: Total Orders */}
-          <div className="stat-card">
+          {/* Card 1: Total Orders (NOW CLICKABLE) */}
+          <div 
+            className="stat-card" 
+            onClick={() => navigate("/dashboard/orders")}
+            style={{ cursor: "pointer" }}
+          >
             <div className="icon-box blue-gradient">
               <span className="icon">📦</span>
             </div>
@@ -62,7 +65,7 @@ const Dashboard = () => {
           {/* Card 2: Total Spent */}
           <div className="stat-card">
             <div className="icon-box green-gradient">
-              <span className="icon">₹</span>
+              <span className="icon">💰</span>
             </div>
             <div className="stat-details">
               <h3>Total Spent</h3>
@@ -76,7 +79,7 @@ const Dashboard = () => {
             onClick={() => navigate("/booking/create")}
           >
             <div className="icon-box orange-gradient">
-              <span className="icon">🚀</span>
+              <span className="icon">🚚</span>
             </div>
             <div className="stat-details">
               <h3>Send Package</h3>
@@ -99,7 +102,7 @@ const Dashboard = () => {
              {/* If stats.total is 0, show empty state, else show a teaser */}
              {stats.total === 0 ? (
                <div className="empty-state">
-                 <div className="empty-icon">📮</div>
+                 <div className="empty-icon">📫</div>
                  <p>No shipments yet. Start your first delivery today!</p>
                </div>
              ) : (

@@ -1,0 +1,253 @@
+/* --- Global Layout --- */
+.booking-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 100px; /* Space for fixed footer */
+}
+
+.main-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* --- Header Section --- */
+.header-section {
+  margin-bottom: 30px;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.step-indicator {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.step-text {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* --- Content Grid (Desktop Default) --- */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 350px; /* Left content, Right sidebar */
+  gap: 30px;
+  align-items: start;
+}
+
+/* --- Cards & Inputs --- */
+.booking-card {
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.icon-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.locate-btn {
+  background: #eff6ff;
+  border: none;
+  color: #2563eb;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+
+.locate-btn:hover {
+  background: #dbeafe;
+}
+
+.connector-line {
+  width: 2px;
+  height: 24px;
+  background: #e2e8f0;
+  margin-left: 11px; /* Align with icon center usually */
+  margin-bottom: 8px;
+  margin-top: -10px;
+}
+
+/* --- Map Section --- */
+.map-wrapper {
+  height: 300px;
+  background: #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border: 4px solid white;
+}
+
+.info-card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  margin-top: 20px;
+}
+
+.info-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  color: #0f172a;
+}
+
+.benefit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* --- Footer Bar --- */
+.footer-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  padding: 16px 40px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btn-secondary {
+  padding: 12px 24px;
+  background: transparent;
+  color: #64748b;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-primary {
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+  transition: transform 0.2s;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.error-box {
+  margin-top: 16px;
+  padding: 14px;
+  background: #fef2f2;
+  border: 1px solid #fee2e2;
+  border-radius: 12px;
+  color: #ef4444;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ========================================= */
+/* --- MOBILE RESPONSIVENESS (Magic Here) --- */
+/* ========================================= */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 24px 16px;
+  }
+
+  /* Stack Grid: Map goes below inputs */
+  .content-grid {
+    grid-template-columns: 1fr; 
+    gap: 24px;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+  }
+
+  .booking-card {
+    padding: 20px; /* Less padding on mobile card */
+  }
+  
+  /* Map adjustments for mobile */
+  .map-wrapper {
+    height: 250px; /* Slightly shorter on mobile */
+  }
+
+  /* Footer adjustments */
+  .footer-bar {
+    padding: 12px 20px;
+  }
+  
+  .btn-primary {
+    padding: 12px 24px;
+    font-size: 0.95rem;
+  }
+  
+  .btn-secondary {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+}
