@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBookingContext } from "../../context/BookingContext";
 import { useAuth } from "../../hooks/useAuth";
-import { createBooking } from "../../services/bookingService"; // We will mock this or use real
+import { createBooking } from "../../services/bookingService"; 
 import Button from "../../components/common/Button";
 
 const BookingSummary = () => {
   const { pickup, drop, vehicle, distance } = useBookingContext();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false); // Added loading state
 
   // Price Calculation Logic
   const baseFare = distance * (vehicle?.pricePerKm || 0);
@@ -17,28 +18,42 @@ const BookingSummary = () => {
   const totalAmount = Math.round(baseFare + tax + serviceFee);
 
   const handleConfirmBooking = async () => {
+    if (!user) {
+      alert("Please login to complete the booking.");
+      return;
+    }
+
+    setLoading(true);
+
     // Real app would send data to backend here
     const bookingData = {
       pickup,
       drop,
       vehicle: vehicle?.name,
       price: totalAmount,
+      distance: distance,
       date: new Date().toISOString(),
-      userId: user?.uid,
+      userId: user.uid,
       status: "Pending" // Initial status
     };
 
     try {
-      // Mock API Call
-      console.log("Booking Confirmed:", bookingData);
+      // 🟢 FIX: Calling the actual Firebase service
+      const { id, error } = await createBooking(bookingData);
+
+      if (error) {
+        throw new Error(error);
+      }
       
-      // Navigate to Success Page (or Dashboard with success message)
-      alert("Booking Confirmed Successfully! 🚚"); // Temporary feedback
+      console.log("Booking Created with ID:", id);
+      alert("Booking Confirmed Successfully! 🚚"); 
       navigate("/dashboard");
       
     } catch (error) {
       console.error("Booking failed:", error);
-      alert("Something went wrong. Please try again.");
+      alert("Something went wrong: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -144,8 +159,12 @@ const BookingSummary = () => {
                  <span className="total-amount">₹{totalAmount}</span>
               </div>
 
-              <button className="confirm-btn" onClick={handleConfirmBooking}>
-                 Confirm Booking
+              <button 
+                className="confirm-btn" 
+                onClick={handleConfirmBooking}
+                disabled={loading}
+              >
+                 {loading ? "Processing..." : "Confirm Booking"}
               </button>
               
               <p className="terms-text">
@@ -385,8 +404,14 @@ const BookingSummary = () => {
           transition: background 0.2s;
           box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
         }
+        
+        .confirm-btn:disabled {
+          background: #94a3b8;
+          cursor: not-allowed;
+          box-shadow: none;
+        }
 
-        .confirm-btn:hover {
+        .confirm-btn:hover:not(:disabled) {
           background: #1d4ed8;
           transform: translateY(-1px);
         }
