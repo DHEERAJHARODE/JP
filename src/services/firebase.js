@@ -1,16 +1,17 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth"; // GoogleAuthProvider import karein
+import { getAuth, GoogleAuthProvider } from "firebase/auth"; 
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
+// Ab hum data .env file se le rahe hain (Vite ka tarika)
 const firebaseConfig = {
-  apiKey: "AIzaSyC9x2fNfnb4Fuo_O3v9JBuOnD8npg7L31g",
-  authDomain: "shipease-f37c6.firebaseapp.com",
-  projectId: "shipease-f37c6",
-  storageBucket: "shipease-f37c6.firebasestorage.app",
-  messagingSenderId: "899652357232",
-  appId: "1:899652357232:web:c838026ae30b2099e638b5",
-  measurementId: "G-CECY5S7DXX"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
