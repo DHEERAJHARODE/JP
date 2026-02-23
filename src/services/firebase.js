@@ -1,10 +1,8 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth"; // GoogleAuthProvider import karein
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyC9x2fNfnb4Fuo_O3v9JBuOnD8npg7L31g",
   authDomain: "shipease-f37c6.firebaseapp.com",
@@ -15,12 +13,13 @@ const firebaseConfig = {
   measurementId: "G-CECY5S7DXX"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Services
 const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Google Provider yahan initialize karein
+export const googleProvider = new GoogleAuthProvider();
 
 export default app;

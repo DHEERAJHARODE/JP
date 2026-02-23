@@ -13,7 +13,13 @@ const PublicRoute = () => {
     );
   }
 
-  return user ? <Navigate to="/dashboard" replace /> : <Outlet />;
+  // FIX: Agar user logged in hai aur usne email verify kar liya hai tabhi dashboard bhejo.
+  // Isse naya account banate waqt wo register page se redirect ho payega aur verify-email page dekh payega.
+  if (user && user.emailVerified) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default PublicRoute;

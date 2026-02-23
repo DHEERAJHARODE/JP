@@ -14,6 +14,8 @@ import LandingPage from "../pages/Home/LandingPage";
 import About from "../pages/Home/About"; // Import the new About page
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
+import ForgotPassword from "../pages/Auth/ForgotPassword"; // Forgot Password import add kiya
+import VerifyEmailPage from "../pages/Auth/VerifyEmailPage";
 
 // Booking Pages
 import CreateBooking from "../pages/Booking/CreateBooking";
@@ -33,6 +35,7 @@ const AppRoutes = () => {
       <Route element={<MainLayout />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/about" element={<About />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
       </Route>
 
       {/* --- GUEST ONLY ROUTES --- */}
@@ -41,6 +44,7 @@ const AppRoutes = () => {
         <Route element={<MainLayout />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Forgot Password Route yaha add kiya */}
         </Route>
       </Route>
 

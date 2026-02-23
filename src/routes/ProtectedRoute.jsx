@@ -13,7 +13,12 @@ const ProtectedRoute = () => {
     );
   }
 
-  return user ? <Outlet /> : <Navigate to="/login" replace />;
+  // FIX: Agar user login nahi hai, YA uska email verify nahi kiya hai, toh login par bhejo.
+  if (!user || !user.emailVerified) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
