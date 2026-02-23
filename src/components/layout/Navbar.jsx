@@ -12,7 +12,6 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // स्क्रॉल होने पर बैकग्राउंड ट्रांसपेरेंट से सॉलिड करने के लिए
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -21,7 +20,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // रूट बदलते ही मोबाइल मेनू बंद कर दें
+
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);

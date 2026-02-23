@@ -1,16 +1,22 @@
 import React from "react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { signOut } from "firebase/auth"; // Firebase se signOut import kiya
+import { auth } from "../../services/firebase"; // Apni auth config import ki
 import "../../App.css"; 
 
 const Profile = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  // Handle Logout locally if needed, or rely on Navbar
-  const handleLogout = () => {
-    // Logic usually in Navbar, but we can add a 'Sign Out' button here too
-    navigate("/login");
+  // Handle Logout properly
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Firebase se session clear karna
+      navigate("/login");  // Login page par wapas bhejna
+    } catch (error) {
+      console.error("Error signing out: ", error);
+    }
   };
 
   return (
@@ -22,11 +28,11 @@ const Profile = () => {
         {/* Profile Header */}
         <div style={styles.header}>
           <div style={styles.avatar}>
-            {user.email?.charAt(0).toUpperCase()}
+            {user?.email?.charAt(0).toUpperCase()}
           </div>
           <div>
             <h3 style={{ fontSize: "1.5rem", marginBottom: "4px" }}>
-              {user.email?.split('@')[0]}
+              {user?.email?.split('@')[0]}
             </h3>
             <span style={styles.badge}>Rb Verified User</span>
           </div>
@@ -38,20 +44,20 @@ const Profile = () => {
         <div style={styles.grid}>
           <div style={styles.field}>
             <label style={styles.label}>Email Address</label>
-            <div style={styles.value}>{user.email}</div>
+            <div style={styles.value}>{user?.email}</div>
           </div>
           
           <div style={styles.field}>
             <label style={styles.label}>Member Since</label>
             <div style={styles.value}>
-              {new Date(user.metadata.creationTime).toLocaleDateString()}
+              {user?.metadata?.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString() : "N/A"}
             </div>
           </div>
 
           <div style={styles.field}>
             <label style={styles.label}>User ID</label>
-            <div style={styles.value} title={user.uid}>
-              {user.uid.slice(0, 12)}...
+            <div style={styles.value} title={user?.uid}>
+              {user?.uid?.slice(0, 12)}...
             </div>
           </div>
 
