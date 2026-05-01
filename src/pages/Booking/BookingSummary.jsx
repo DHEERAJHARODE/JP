@@ -6,10 +6,20 @@ import { createBooking } from "../../services/bookingService";
 import Button from "../../components/common/Button";
 
 const BookingSummary = () => {
-  const { pickup, drop, vehicle, distance } = useBookingContext();
+  // 🟢 Nayi details context se nikal li hain
+  const { 
+    pickup, 
+    drop, 
+    vehicle, 
+    distance,
+    customerName,    
+    customerPhone,   
+    userEmail        
+  } = useBookingContext();
+  
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); // Added loading state
+  const [loading, setLoading] = useState(false); 
 
   // Price Calculation Logic
   const baseFare = distance * (vehicle?.pricePerKm || 0);
@@ -25,20 +35,22 @@ const BookingSummary = () => {
 
     setLoading(true);
 
-    // Real app would send data to backend here
+    // 🟢 FIX: Database me bhejne ke liye naye fields add kar diye
     const bookingData = {
-      pickup,
-      drop,
-      vehicle: vehicle?.name,
+      pickup: pickup,
+      drop: drop,
+      vehicleName: vehicle?.name,
       price: totalAmount,
       distance: distance,
-      date: new Date().toISOString(),
+      customerName: customerName || user.displayName || "User", 
+      customerPhone: customerPhone, 
+      userEmail: userEmail || user.email || "", 
+      createdAt: new Date().toISOString(), // Admin panel uses createdAt
       userId: user.uid,
       status: "Pending" // Initial status
     };
 
     try {
-      // 🟢 FIX: Calling the actual Firebase service
       const { id, error } = await createBooking(bookingData);
 
       if (error) {
@@ -111,7 +123,6 @@ const BookingSummary = () => {
                <h3 className="card-title">Vehicle Selected</h3>
                <div className="vehicle-info">
                   <div className="vehicle-icon-box">
-                     {/* Placeholder for Vehicle Image/Icon */}
                      <span style={{fontSize: '2rem'}}>🚚</span>
                   </div>
                   <div>
@@ -122,6 +133,16 @@ const BookingSummary = () => {
                </div>
             </div>
 
+            {/* 🟢 Customer Details Card (Naya UI Add kiya taki user ko summary me uski details dikh jaye) */}
+            <div className="card customer-card">
+               <h3 className="card-title">Contact Information</h3>
+               <div style={{ color: "#334155", fontSize: "0.95rem" }}>
+                  <p style={{ margin: "4px 0" }}><strong>Name:</strong> {customerName}</p>
+                  <p style={{ margin: "4px 0" }}><strong>Phone:</strong> {customerPhone}</p>
+                  {userEmail && <p style={{ margin: "4px 0" }}><strong>Email:</strong> {userEmail}</p>}
+               </div>
+            </div>
+
             {/* Payment Method (Mock) */}
             <div className="card payment-card">
                <h3 className="card-title">Payment Method</h3>
@@ -129,7 +150,6 @@ const BookingSummary = () => {
                   <div className="radio-selected"></div>
                   <span>Cash on Delivery / UPI upon arrival</span>
                </div>
-               {/* Add more payment options here later */}
             </div>
 
           </div>
@@ -212,15 +232,13 @@ const BookingSummary = () => {
           margin: 0;
         }
 
-        /* --- Grid Layout --- */
         .content-grid {
           display: grid;
-          grid-template-columns: 1fr 380px; /* Left takes space, Right fixed */
+          grid-template-columns: 1fr 380px;
           gap: 32px;
           align-items: start;
         }
 
-        /* --- Cards Generic --- */
         .card {
           background: white;
           border-radius: 16px;
@@ -237,7 +255,6 @@ const BookingSummary = () => {
           margin-bottom: 20px;
         }
 
-        /* --- Route Timeline --- */
         .route-timeline {
           position: relative;
           padding-left: 10px;
@@ -252,7 +269,7 @@ const BookingSummary = () => {
 
         .timeline-line {
           position: absolute;
-          left: 14px; /* Align with dots center */
+          left: 14px;
           top: 10px;
           bottom: 30px;
           width: 2px;
@@ -266,7 +283,7 @@ const BookingSummary = () => {
           border-radius: 50%;
           margin-top: 6px;
           flex-shrink: 0;
-          outline: 4px solid white; /* Creates gap around dot */
+          outline: 4px solid white;
         }
         .green-dot { background: #22c55e; }
         .red-dot { background: #ef4444; }
@@ -300,7 +317,6 @@ const BookingSummary = () => {
           margin-top: 10px;
         }
 
-        /* --- Vehicle Info --- */
         .vehicle-info {
           display: flex;
           align-items: center;
@@ -329,7 +345,6 @@ const BookingSummary = () => {
           cursor: pointer;
         }
 
-        /* --- Payment --- */
         .payment-option {
           display: flex;
           align-items: center;
@@ -348,7 +363,6 @@ const BookingSummary = () => {
           background: white;
         }
 
-        /* --- Bill Section (Right) --- */
         .bill-card {
           background: white;
           border-radius: 16px;
@@ -424,14 +438,13 @@ const BookingSummary = () => {
           line-height: 1.4;
         }
 
-        /* --- Mobile Responsiveness --- */
         @media (max-width: 850px) {
           .content-grid {
-             grid-template-columns: 1fr; /* Stack vertically on tablet/mobile */
+             grid-template-columns: 1fr;
           }
           
           .bill-card {
-             position: relative; /* Remove sticky on mobile */
+             position: relative;
              top: 0;
           }
         }

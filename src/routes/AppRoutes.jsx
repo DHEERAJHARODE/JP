@@ -27,6 +27,9 @@ import Dashboard from "../pages/Dashboard/Dashboard";
 import MyOrders from "../pages/Dashboard/MyOrders";
 import Profile from "../pages/Dashboard/Profile";
 
+// 👇 SIRF YEH IMPORT ADD KIYA HAI
+import AdminDashboard from "../pages/Dashboard/AdminDashboard";
+
 const AppRoutes = () => {
   return (
     <Routes>
@@ -54,6 +57,9 @@ const AppRoutes = () => {
           <Route path="/booking/create" element={<CreateBooking />} />
           <Route path="/booking/vehicle" element={<SelectVehicle />} />
           <Route path="/booking/summary" element={<BookingSummary />} />
+          
+          {/* 👇 SIRF YEH ROUTE ADD KIYA HAI */}
+          <Route path="/admin" element={<AdminDashboard />} />
         </Route>
       </Route>
 

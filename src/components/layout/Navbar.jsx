@@ -20,7 +20,6 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location]);
@@ -354,6 +353,18 @@ const NavLinks = ({ user, isActive, handleLogout, isMobile = false }) => (
         <Link to="/dashboard/profile" className={`nav-item ${isActive('/dashboard/profile') ? 'active' : ''}`}>
           Profile
         </Link>
+        
+        {/* 🟢 YAHAN ADMIN LINK ADD KIYA HAI */}
+        {user.email === "dheerajharode704@gmail.com" && (
+          <Link 
+            to="/admin" 
+            className={`nav-item ${isActive('/admin') ? 'active' : ''}`}
+            style={{ color: "#ef4444", fontWeight: "bold" }}
+          >
+            Admin Panel
+          </Link>
+        )}
+
         <div className="user-menu">
           <span className="user-email">{user.email?.split('@')[0]}</span>
           <button onClick={handleLogout} className="btn-logout">

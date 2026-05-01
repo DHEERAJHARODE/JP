@@ -1,27 +1,80 @@
-import { collection, addDoc, getDocs, query, where } from "firebase/firestore";
-import { db } from "./firebase";
+import { db } from "./firebase"; 
+import { collection, addDoc, getDocs, updateDoc, doc, orderBy, query, where } from "firebase/firestore"; // 'where' add kiya hai
 
-// Firestore collection reference
-const bookingsRef = collection(db, "bookings");
-
-// Create new booking
+// 1️⃣ NAYI BOOKING BANANE KA FUNCTION 
 export const createBooking = async (bookingData) => {
   try {
-    const docRef = await addDoc(bookingsRef, bookingData);
+    const docRef = await addDoc(collection(db, "bookings"), {
+      pickup: bookingData.pickup || "",
+      drop: bookingData.drop || "",
+      vehicle: bookingData.vehicleName || bookingData.vehicle || "N/A", 
+      price: bookingData.price || 0,
+      distance: bookingData.distance || 0,
+      userId: bookingData.userId || "",
+      status: bookingData.status || "Pending",
+      createdAt: bookingData.createdAt || new Date().toISOString(),
+      customerName: bookingData.customerName || "Unknown Customer",
+      customerPhone: bookingData.customerPhone || "No Phone",
+      userEmail: bookingData.userEmail || "No Email"
+    });
+    
     return { id: docRef.id, error: null };
   } catch (error) {
+    console.error("Error creating booking:", error);
     return { id: null, error: error.message };
   }
 };
 
-// Get all bookings for a user
-export const getUserBookings = async (userId) => {
+// 2️⃣ ADMIN PANEL KE LIYE SAARI BOOKINGS LAANE KA FUNCTION
+export const getAllBookings = async () => {
   try {
-    const q = query(bookingsRef, where("userId", "==", userId));
-    const snapshot = await getDocs(q);
-    const bookings = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+    const q = query(collection(db, "bookings"), orderBy("createdAt", "desc"));
+    const querySnapshot = await getDocs(q);
+    
+    const bookings = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    
     return { bookings, error: null };
   } catch (error) {
+    console.error("Error fetching bookings:", error);
+    return { bookings: [], error: error.message };
+  }
+};
+
+// 3️⃣ ADMIN PANEL ME STATUS UPDATE KARNE KA FUNCTION
+export const updateBookingStatus = async (bookingId, newStatus) => {
+  try {
+    const bookingRef = doc(db, "bookings", bookingId);
+    await updateDoc(bookingRef, {
+      status: newStatus
+    });
+    return { error: null };
+  } catch (error) {
+    console.error("Error updating status:", error);
+    return { error: error.message };
+  }
+};
+
+// 4️⃣ USER DASHBOARD KE LIYE SIRF USKI BOOKINGS LAANE KA FUNCTION (Missing Function Added!)
+export const getUserBookings = async (userId) => {
+  try {
+    // Sirf wahi bookings laao jinka userId match karta ho
+    const q = query(collection(db, "bookings"), where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    
+    const bookings = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    // Bookings ko latest date ke hisaab se sort kar do
+    bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    
+    return { bookings, error: null };
+  } catch (error) {
+    console.error("Error fetching user bookings:", error);
     return { bookings: [], error: error.message };
   }
 };

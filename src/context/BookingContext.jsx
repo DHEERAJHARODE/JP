@@ -9,12 +9,20 @@ export const BookingProvider = ({ children }) => {
   const [distance, setDistance] = useState(0);
   const [price, setPrice] = useState(0);
 
+  // Customer Details States
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+
   const resetBooking = () => {
     setPickup("");
     setDrop("");
     setVehicle(null);
     setDistance(0);
     setPrice(0);
+    setCustomerName("");
+    setCustomerPhone("");
+    setUserEmail("");
   };
 
   const value = {
@@ -23,11 +31,17 @@ export const BookingProvider = ({ children }) => {
     vehicle,
     distance,
     price,
+    customerName,
+    customerPhone,
+    userEmail,
     setPickup,
     setDrop,
     setVehicle,
     setDistance,
     setPrice,
+    setCustomerName,
+    setCustomerPhone,
+    setUserEmail,
     resetBooking,
   };
 

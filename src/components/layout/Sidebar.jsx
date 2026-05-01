@@ -1,7 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth"; // 🟢 useAuth import kiya
 
 const Sidebar = () => {
+  const { user } = useAuth(); // 🟢 Current user nikal liya
+
   return (
     <aside style={styles.sidebar}>
       <h2 style={styles.logo}>Dashboard</h2>
@@ -18,6 +21,16 @@ const Sidebar = () => {
         <NavLink to="/dashboard/profile" style={styles.link}>
           Profile
         </NavLink>
+
+        {/* 🟢 YAHAN BHI ADMIN LINK ADD KIYA HAI */}
+        {user && user.email === "dheerajharode704@gmail.com" && (
+          <NavLink 
+            to="/admin" 
+            style={{...styles.link, color: "#ef4444", fontWeight: "bold", marginTop: "16px", borderTop: "1px solid #1e293b", paddingTop: "16px"}}
+          >
+            Admin Panel
+          </NavLink>
+        )}
       </nav>
     </aside>
   );
