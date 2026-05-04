@@ -15,6 +15,8 @@ const Footer = () => {
         {/* Links Column 1 */}
         <div className="footer-links">
            <h4>Company</h4>
+           {/* 🟢 Home link yahan add kar diya gaya hai */}
+           <Link to="/">Home</Link>
            <Link to="/about">About Us</Link>
            <Link to="/careers">Careers</Link>
            <Link to="/blog">Blog</Link>

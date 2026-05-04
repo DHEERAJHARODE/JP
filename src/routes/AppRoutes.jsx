@@ -1,6 +1,9 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
+// 🟢 Yahan ScrollToTop ko import kiya hai (path apne folder structure ke hisaab se set kar lena)
+import ScrollToTop from "../components/ScrollToTop"; 
+
 // Layouts
 import MainLayout from "../layouts/MainLayout";
 import DashboardLayout from "../layouts/DashboardLayout";
@@ -39,57 +42,62 @@ import AdminDashboard from "../pages/Dashboard/AdminDashboard";
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      {/* --- PUBLIC ROUTES (Accessible to Everyone) --- */}
-      {/* These use MainLayout, so they will have the Header & Footer */}
-      <Route element={<MainLayout />}>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
-        
-        {/* 👇 NAYE FOOTER PAGES KE ROUTES YAHAN ADD KIYE HAIN */}
-        <Route path="/careers" element={<Careers />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/support" element={<Support />} />
-        <Route path="/help-center" element={<HelpCenter />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/terms-privacy" element={<TermsPrivacy />} />
-      </Route>
-
-      {/* --- GUEST ONLY ROUTES --- */}
-      {/* Redirects to dashboard if already logged in */}
-      <Route element={<PublicRoute />}>
+    <>
+      {/* 🟢 Yahan ScrollToTop component laga diya hai, jo har route change par chalega */}
+      <ScrollToTop />
+      
+      <Routes>
+        {/* --- PUBLIC ROUTES (Accessible to Everyone) --- */}
+        {/* These use MainLayout, so they will have the Header & Footer */}
         <Route element={<MainLayout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-        </Route>
-      </Route>
-
-      {/* --- PROTECTED ROUTES (Booking) --- */}
-      <Route element={<ProtectedRoute />}>
-        <Route element={<MainLayout />}>
-          <Route path="/booking/create" element={<CreateBooking />} />
-          <Route path="/booking/vehicle" element={<SelectVehicle />} />
-          <Route path="/booking/summary" element={<BookingSummary />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
           
-          <Route path="/admin" element={<AdminDashboard />} />
+          {/* 👇 NAYE FOOTER PAGES KE ROUTES YAHAN ADD KIYE HAIN */}
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/product" element={<Product />} />
+          <Route path="/support" element={<Support />} />
+          <Route path="/help-center" element={<HelpCenter />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/terms-privacy" element={<TermsPrivacy />} />
         </Route>
-      </Route>
 
-      {/* --- DASHBOARD ROUTES --- */}
-      <Route element={<ProtectedRoute />}>
-        <Route element={<DashboardLayout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/orders" element={<MyOrders />} />
-          <Route path="/dashboard/profile" element={<Profile />} />
+        {/* --- GUEST ONLY ROUTES --- */}
+        {/* Redirects to dashboard if already logged in */}
+        <Route element={<PublicRoute />}>
+          <Route element={<MainLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+          </Route>
         </Route>
-      </Route>
 
-      {/* 404 Fallback */}
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+        {/* --- PROTECTED ROUTES (Booking) --- */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<MainLayout />}>
+            <Route path="/booking/create" element={<CreateBooking />} />
+            <Route path="/booking/vehicle" element={<SelectVehicle />} />
+            <Route path="/booking/summary" element={<BookingSummary />} />
+            
+            <Route path="/admin" element={<AdminDashboard />} />
+          </Route>
+        </Route>
+
+        {/* --- DASHBOARD ROUTES --- */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<DashboardLayout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/orders" element={<MyOrders />} />
+            <Route path="/dashboard/profile" element={<Profile />} />
+          </Route>
+        </Route>
+
+        {/* 404 Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
   );
 };
 

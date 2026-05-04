@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // 🟢 useLocation import kiya hai
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { FaRobot, FaPaperPlane, FaTimes, FaCommentDots } from 'react-icons/fa';
 import './AIAssistant.css';
@@ -9,6 +9,8 @@ const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 const AIAssistant = () => {
+  const location = useLocation(); // 🟢 Current page ka URL get karne ke liye
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
     { 
@@ -28,6 +30,19 @@ const AIAssistant = () => {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   }, [messages, isLoading, isOpen]);
+
+  // 🟢 --- HIDE CHATBOT LOGIC --- 🟢
+  const hiddenRoutes = [
+    "/booking/create",
+    "/booking/vehicle",
+    "/booking/summary"
+  ];
+
+  // Agar user in teeno pages mein se kisi par hai, toh chatbot UI load hi nahi hoga
+  if (hiddenRoutes.includes(location.pathname)) {
+    return null; 
+  }
+  // ---------------------------------
 
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
