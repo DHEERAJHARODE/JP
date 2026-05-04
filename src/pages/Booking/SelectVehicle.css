@@ -3,7 +3,7 @@
   min-height: 100vh;
   background-color: #f8fafc;
   font-family: 'Inter', sans-serif;
-  padding-bottom: 100px; /* Space for fixed footer */
+  padding-bottom: 120px; /* Footer overlap se bachne ke liye extra space */
 }
 
 .main-container {
@@ -58,7 +58,7 @@
 /* --- Content Grid --- */
 .content-grid {
   display: grid;
-  grid-template-columns: 1fr 360px; /* List takes remaining space, Sidebar fixed width */
+  grid-template-columns: 1fr 340px; /* Sidebar width safe ki hai taaki overflow na ho */
   gap: 40px;
   align-items: start;
 }
@@ -68,7 +68,7 @@
   min-height: 300px;
 }
 
-/* --- Right Sidebar (Info Card) --- */
+/* --- Right Sidebar (Info Card) - 🟢 YAHAN FIX HAI --- */
 .info-card {
   background: white;
   padding: 24px;
@@ -76,7 +76,14 @@
   border: 1px solid #e2e8f0;
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
   position: sticky;
-  top: 24px; /* Sticks while scrolling */
+  top: 100px; /* Header se thoda dur rakha */
+  
+  /* Strict Vertical Alignment taaki side-by-side na ho */
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden; /* Extra chizein bahar nahi jayengi */
 }
 
 .info-title {
@@ -84,6 +91,7 @@
   font-weight: 800;
   color: #1e293b;
   margin: 0 0 12px 0;
+  width: 100%; /* Fix width */
 }
 
 .info-description {
@@ -91,8 +99,11 @@
   color: #64748b;
   line-height: 1.6;
   margin-bottom: 24px;
+  width: 100%;
+  word-wrap: break-word; /* Lamba text break hokar niche aayega */
 }
 
+/* --- Benefit List --- */
 .benefit-list {
   display: flex;
   flex-direction: column;
@@ -100,15 +111,17 @@
   padding: 0;
   list-style: none;
   margin: 0;
+  width: 100%;
 }
 
 .benefit-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* Icon aur text properly top align honge */
   gap: 12px;
   font-size: 0.95rem;
   color: #334155;
   font-weight: 500;
+  width: 100%;
 }
 
 .benefit-icon {
@@ -121,13 +134,20 @@
   align-items: center;
   justify-content: center;
   font-size: 1.1rem;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Icon compress nahi hoga */
+}
+
+.benefit-item span {
+  flex: 1; /* Text bacha hua space cover karega */
+  line-height: 1.4;
+  margin-top: 6px;
 }
 
 .divider {
   height: 1px;
   background: #f1f5f9;
   margin: 24px 0;
+  width: 100%;
 }
 
 /* --- Footer Bar --- */
@@ -136,13 +156,14 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background: white;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
   padding: 16px 40px;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 100;
+  z-index: 9999; /* Button ab sabse upar rahega */
   border-top: 1px solid #e2e8f0;
 }
 
@@ -170,6 +191,8 @@
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
   transition: transform 0.2s;
+  position: relative;
+  z-index: 10000;
 }
 .btn-primary:active { transform: scale(0.98); }
 

@@ -24,16 +24,15 @@ const Footer = () => {
         <div className="footer-links">
            <h4>Product</h4>
            <Link to="/booking/create">Book Truck</Link>
-           <Link to="/enterprise">Enterprise</Link>
-           <Link to="/pricing">Pricing</Link>
+           <Link to="/product">Product</Link>
         </div>
 
         {/* Links Column 3 */}
         <div className="footer-links">
            <h4>Support</h4>
-           <Link to="/help">Help Center</Link>
-           <Link to="/contact">Contact Us</Link>
-           <Link to="/terms">Terms & Privacy</Link>
+           <Link to="/help-center">Help Center</Link>
+           <Link to="/contact-us">Contact Us</Link>
+           <Link to="/terms-privacy">Terms & Privacy</Link>
         </div>
 
       </div>

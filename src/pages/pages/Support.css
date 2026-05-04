@@ -1,0 +1,102 @@
+.support-container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: inherit;
+  color: #333;
+  padding-bottom: 50px;
+}
+
+.support-header {
+  background: linear-gradient(135deg, #646cff 0%, #535bf2 100%);
+  color: #ffffff;
+  padding: 80px 20px 100px;
+  text-align: center;
+}
+
+.support-header h1 {
+  font-size: 3rem;
+  margin: 0 0 10px 0;
+  font-weight: 700;
+}
+
+.support-header p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.support-content {
+  max-width: 1000px;
+  margin: -50px auto 0;
+  padding: 0 20px;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.support-card {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.support-card:hover {
+  transform: translateY(-5px);
+}
+
+.support-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.support-card h3 {
+  margin: 0 0 15px 0;
+  color: #1a1a1a;
+  font-size: 1.4rem;
+}
+
+.support-card p {
+  line-height: 1.6;
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 25px;
+  flex-grow: 1; /* Isse button hamesha bottom par align rahega */
+}
+
+.support-btn {
+  background-color: transparent;
+  color: #646cff;
+  border: 2px solid #646cff;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.support-btn:hover {
+  background-color: #646cff;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .support-header h1 {
+    font-size: 2.2rem;
+  }
+  
+  .support-card {
+    padding: 30px 20px;
+  }
+}
