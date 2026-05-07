@@ -11,8 +11,12 @@ const SelectVehicle = () => {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
 
+  // NAYA STATE: Available vehicles ko manage karne ke liye
+  const [availableVehicles, setAvailableVehicles] = useState(VEHICLES);
+
   const { calculateDistance, distance, loading } = useMaps();
 
+  // Maps API se distance calculate kar ke context me set karta hai
   useEffect(() => {
     if (pickup && drop) {
       calculateDistance(pickup, drop).then((calculatedDist) => {
@@ -22,6 +26,23 @@ const SelectVehicle = () => {
       });
     }
   }, [pickup, drop]); 
+
+  // FILTER LOGIC: Distance ke basis pe vehicles ko filter karna
+  useEffect(() => {
+    if (distance > 0) {
+      // Wahi gaadi dikhegi jiska maxDistance computed distance se zyada ya barabar hoga
+      const filteredList = VEHICLES.filter(v => distance <= v.maxDistance);
+      setAvailableVehicles(filteredList);
+
+      // Agar user ne pehle aisi gaadi select ki thi jo ab out-of-range hai, toh use clear kar do
+      if (vehicle && distance > vehicle.maxDistance) {
+        setVehicle(null);
+      }
+    } else {
+      // Jab tak distance na aaye, saari gaadiya dikhao
+      setAvailableVehicles(VEHICLES);
+    }
+  }, [distance, vehicle, setVehicle]);
 
   const handleNext = () => {
     if (!vehicle) {
@@ -58,9 +79,9 @@ const SelectVehicle = () => {
           
           {/* Left Column: Vehicle List */}
           <div className="vehicle-list-wrapper">
-             {/* ✅ Passing Data to Component */}
+             {/* ✅ Filtering ke baad aayi list pass karein */}
              <VehicleList 
-               vehicles={VEHICLES} 
+               vehicles={availableVehicles} 
                selectedVehicle={vehicle}
                onSelect={setVehicle}
                distance={distance}
@@ -71,7 +92,6 @@ const SelectVehicle = () => {
           <aside className="info-card">
             <h3 className="info-title">Why ShipEase?</h3>
             
-            {/* ✅ Description restored */}
             <p className="info-description">
               Reliable logistics partner for all your shifting needs. 
               We ensure safety, speed, and transparency in every move.

@@ -16,7 +16,8 @@ export const VEHICLES = [
     size: "Small Box", 
     description: "Documents, keys, small parcels & food.", 
     pricePerKm: 10,
-    image: bikeImg
+    image: bikeImg,
+    maxDistance: 20 // 20 km se zyada nahi
   },
   { 
     id: 2, 
@@ -25,7 +26,8 @@ export const VEHICLES = [
     size: "5ft x 4.5ft x 5ft", 
     description: "Best for few cartons, electronics or small furniture.", 
     pricePerKm: 15,
-    image: autoImg
+    image: autoImg,
+    maxDistance: 50 // 50 km se zyada nahi
   },
   { 
     id: 3, 
@@ -34,7 +36,8 @@ export const VEHICLES = [
     size: "7ft x 4ft x 5ft", 
     description: "Ideal for 1 BHK partial shifting or medium goods.", 
     pricePerKm: 20,
-    image: chotaHathiImg
+    image: chotaHathiImg,
+    maxDistance: 200 // 200 km se zyada nahi
   },
   { 
     id: 4, 
@@ -43,7 +46,8 @@ export const VEHICLES = [
     size: "8ft x 4.5ft x 5.5ft", 
     description: "Perfect for 1 BHK complete shifting or commercial goods.", 
     pricePerKm: 30,
-    image: pickupImg
+    image: pickupImg,
+    maxDistance: 800 // 800 km se zyada nahi
   },
   { 
     id: 5, 
@@ -52,7 +56,8 @@ export const VEHICLES = [
     size: "14ft x 6ft x 7ft", 
     description: "Great for 2 BHK household or office shifting.", 
     pricePerKm: 45,
-    image: eicherImg
+    image: eicherImg,
+    maxDistance: Infinity // All-over India ja sakti hai
   },
   { 
     id: 6, 
@@ -61,7 +66,8 @@ export const VEHICLES = [
     size: "19ft x 7ft x 7ft", 
     description: "For 3+ BHK, industrial machinery & heavy loads.", 
     pricePerKm: 65,
-    image: tataTruckImg
+    image: tataTruckImg,
+    maxDistance: Infinity // All-over India ja sakti hai
   },
 ];
 
