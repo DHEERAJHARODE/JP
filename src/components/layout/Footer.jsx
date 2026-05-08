@@ -15,7 +15,6 @@ const Footer = () => {
         {/* Links Column 1 */}
         <div className="footer-links">
            <h4>Company</h4>
-           {/* 🟢 Home link yahan add kar diya gaya hai */}
            <Link to="/">Home</Link>
            <Link to="/about">About Us</Link>
            <Link to="/careers">Careers</Link>
@@ -32,9 +31,10 @@ const Footer = () => {
         {/* Links Column 3 */}
         <div className="footer-links">
            <h4>Support</h4>
-           <Link to="/help-center">Help Center</Link>
-           <Link to="/contact-us">Contact Us</Link>
-           <Link to="/terms-privacy">Terms & Privacy</Link>
+           {/* 🟢 Yahan Links theek kiye gaye hain AppRoutes ke hisaab se */}
+           <Link to="/help">Help Center</Link>
+           <Link to="/contact">Contact Us</Link>
+           <Link to="/terms">Terms & Privacy</Link>
         </div>
 
       </div>
