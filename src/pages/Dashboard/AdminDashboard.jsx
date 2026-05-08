@@ -14,7 +14,9 @@ const AdminDashboard = () => {
     setLoading(true);
     const { bookings, error } = await getAllBookings();
     if (!error) {
-      setBookings(bookings);
+      // Latest bookings ko hamesha top par dikhane ke liye sort kiya
+      const sortedBookings = bookings.sort((a, b) => new Date(b.createdAt || b.date) - new Date(a.createdAt || a.date));
+      setBookings(sortedBookings);
     }
     setLoading(false);
   };
@@ -46,13 +48,15 @@ const AdminDashboard = () => {
         ) : bookings.length === 0 ? (
           <div style={{ textAlign: "center", padding: "40px", color: "#64748b" }}>No bookings found in the system.</div>
         ) : (
-          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "800px" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", minWidth: "900px" }}>
             <thead>
               <tr style={{ background: "#f8fafc", borderBottom: "2px solid #e2e8f0", textAlign: "left" }}>
                 <th style={{ padding: "16px", color: "#64748b", fontWeight: "600" }}>Date</th>
                 <th style={{ padding: "16px", color: "#64748b", fontWeight: "600" }}>Customer Info</th>
                 <th style={{ padding: "16px", color: "#64748b", fontWeight: "600" }}>Route (Pickup ➔ Drop)</th>
                 <th style={{ padding: "16px", color: "#64748b", fontWeight: "600" }}>Vehicle & Price</th>
+                {/* 🟢 TIMING COLUMN HEADER */}
+                <th style={{ padding: "16px", color: "#64748b", fontWeight: "600" }}>Timing</th>
                 <th style={{ padding: "16px", color: "#64748b", fontWeight: "600" }}>Status Action</th>
               </tr>
             </thead>
@@ -60,14 +64,14 @@ const AdminDashboard = () => {
               {bookings.map((booking) => (
                 <tr key={booking.id} style={{ borderBottom: "1px solid #f1f5f9" }}>
                   
-                  {/* 1. Date Column (Fixed for both 'createdAt' and 'date' fields) */}
+                  {/* 1. Date Column */}
                   <td style={{ padding: "16px", fontSize: "0.9rem" }}>
                     {booking.createdAt || booking.date 
                       ? new Date(booking.createdAt || booking.date).toLocaleDateString() 
                       : "N/A"}
                   </td>
 
-                  {/* 2. Customer Info Column (With Call Button) */}
+                  {/* 2. Customer Info Column */}
                   <td style={{ padding: "16px" }}>
                     <div style={{ fontWeight: "600", color: "#0f172a", fontSize: "0.95rem", marginBottom: "4px" }}>
                       👤 {booking.customerName || booking.userName || "Unknown Customer"}
@@ -79,7 +83,6 @@ const AdminDashboard = () => {
                       📞 {booking.customerPhone || booking.phone || "No Phone"}
                     </div>
                     
-                    {/* Call Button - Sirf tab dikhega jab phone number data me hoga */}
                     {(booking.customerPhone || booking.phone) && (booking.customerPhone !== "No Phone") && (
                       <a 
                         href={`tel:${booking.customerPhone || booking.phone}`}
@@ -110,7 +113,7 @@ const AdminDashboard = () => {
                     </div>
                   </td>
 
-                  {/* 4. Vehicle & Price Column (Fixed for String vs Object mismatch) */}
+                  {/* 4. Vehicle & Price Column */}
                   <td style={{ padding: "16px" }}>
                     <div style={{ fontWeight: "600", color: "#334155", marginBottom: "4px" }}>
                       {typeof booking.vehicle === 'string' 
@@ -122,7 +125,24 @@ const AdminDashboard = () => {
                     </div>
                   </td>
 
-                  {/* 5. Status Action Column */}
+                  {/* 🟢 5. TIMING DATA CELL */}
+                  <td style={{ padding: "16px" }}>
+                    {/* Database Check: Agar bookingType 'scheduled' hai ya uske paas date/time ka data hai */}
+                    {(booking.bookingType === 'scheduled' || (booking.scheduledDate && booking.scheduledTime)) ? (
+                      <div style={{ background: '#eff6ff', padding: '6px 10px', borderRadius: '8px', border: '1px solid #dbeafe' }}>
+                        <span style={{ color: '#1d4ed8', fontWeight: 'bold', fontSize: '0.85rem' }}>📅 Scheduled</span>
+                        <div style={{ fontSize: '0.8rem', color: '#1e40af', marginTop: '2px' }}>
+                          {booking.scheduledDate} | {booking.scheduledTime}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', color: '#059669', fontWeight: '600' }}>
+                        <span>⚡</span> Instant
+                      </div>
+                    )}
+                  </td>
+
+                  {/* 6. Status Action Column */}
                   <td style={{ padding: "16px" }}>
                     <select 
                       value={booking.status || "Pending"}

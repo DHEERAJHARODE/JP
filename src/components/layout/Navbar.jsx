@@ -335,52 +335,74 @@ const Navbar = () => {
 };
 
 // Sub-component to organize links
-const NavLinks = ({ user, isActive, handleLogout, isMobile = false }) => (
-  <>
-    <Link to="/" className={`nav-item ${isActive('/') ? 'active' : ''}`}>
-      Home
-    </Link>
-    
-    <Link to="/about" className={`nav-item ${isActive('/about') ? 'active' : ''}`}>
-      About
-    </Link>
+const NavLinks = ({ user, isActive, handleLogout, isMobile = false }) => {
+  // 🟢 Original styling wala Admin Email Logic
+  const ADMIN_EMAILS = ["admin@shipease.com", "dheerajharode704@gmail.com"];
+  const isAdmin = user && ADMIN_EMAILS.includes(user.email);
 
-    {user ? (
-      <>
-        <Link to="/dashboard" className={`nav-item ${isActive('/dashboard') ? 'active' : ''}`}>
-          Dashboard
-        </Link>
-        <Link to="/dashboard/profile" className={`nav-item ${isActive('/dashboard/profile') ? 'active' : ''}`}>
-          Profile
-        </Link>
-        
-        {/* 🟢 YAHAN ADMIN LINK ADD KIYA HAI */}
-        {user.email === "dheerajharode704@gmail.com" && (
-          <Link 
-            to="/admin" 
-            className={`nav-item ${isActive('/admin') ? 'active' : ''}`}
-            style={{ color: "#ef4444", fontWeight: "bold" }}
-          >
-            Admin Panel
+  return (
+    <>
+      <Link to="/" className={`nav-item ${isActive('/') ? 'active' : ''}`}>
+        Home
+      </Link>
+      
+      <Link to="/about" className={`nav-item ${isActive('/about') ? 'active' : ''}`}>
+        About
+      </Link>
+
+      {user ? (
+        <>
+          <Link to="/dashboard" className={`nav-item ${isActive('/dashboard') ? 'active' : ''}`}>
+            Dashboard
           </Link>
-        )}
+          <Link to="/dashboard/profile" className={`nav-item ${isActive('/dashboard/profile') ? 'active' : ''}`}>
+            Profile
+          </Link>
+          
+          {/* 🟢 YAHAN ADMIN LINKS ADD KIYE HAIN ORIGINAL RED STYLE ME */}
+          {isAdmin && (
+            <>
+              <Link 
+                to="/admin" 
+                className={`nav-item ${isActive('/admin') ? 'active' : ''}`}
+                style={{ color: "#ef4444", fontWeight: "bold" }}
+              >
+                Bookings
+              </Link>
+              <Link 
+                to="/admin/applications" 
+                className={`nav-item ${isActive('/admin/applications') ? 'active' : ''}`}
+                style={{ color: "#ef4444", fontWeight: "bold" }}
+              >
+                Applications
+              </Link>
+              <Link 
+                to="/admin/queries" 
+                className={`nav-item ${isActive('/admin/queries') ? 'active' : ''}`}
+                style={{ color: "#ef4444", fontWeight: "bold" }}
+              >
+                Queries
+              </Link>
+            </>
+          )}
 
-        <div className="user-menu">
-          <span className="user-email">{user.email?.split('@')[0]}</span>
-          <button onClick={handleLogout} className="btn-logout">
-            Logout
-          </button>
-        </div>
-      </>
-    ) : (
-      <>
-        <Link to="/login" className={`nav-item ${isActive('/login') ? 'active' : ''}`}>Login</Link>
-        <Link to="/register" className={`nav-item btn-register`}>
-          Get Started
-        </Link>
-      </>
-    )}
-  </>
-);
+          <div className="user-menu">
+            <span className="user-email">{user.email?.split('@')[0]}</span>
+            <button onClick={handleLogout} className="btn-logout">
+              Logout
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <Link to="/login" className={`nav-item ${isActive('/login') ? 'active' : ''}`}>Login</Link>
+          <Link to="/register" className={`nav-item btn-register`}>
+            Get Started
+          </Link>
+        </>
+      )}
+    </>
+  );
+};
 
 export default Navbar;

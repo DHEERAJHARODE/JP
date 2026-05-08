@@ -6,12 +6,15 @@ import MapView from "../../components/features/MapView";
 import "./CreateBooking.css"; 
 
 const CreateBooking = () => {
-  // Context se location aur customer details dono nikal liye
+  // Context se location, customer details aur scheduling details nikal liye
   const { 
     pickup, drop, setPickup, setDrop,
     customerName, setCustomerName,
     customerPhone, setCustomerPhone,
-    userEmail, setUserEmail
+    userEmail, setUserEmail,
+    bookingType, setBookingType,
+    scheduledDate, setScheduledDate,
+    scheduledTime, setScheduledTime
   } = useBookingContext();
   
   const [error, setError] = useState(null);
@@ -21,6 +24,9 @@ const CreateBooking = () => {
   const [dropCoords, setDropCoords] = useState(null);
 
   const navigate = useNavigate();
+
+  // Aaj ki date nikali taaki user purani date select na kar sake
+  const today = new Date().toISOString().split("T")[0];
 
   const geocodeAddress = async (address, type) => {
     if (!address) return;
@@ -82,7 +88,7 @@ const CreateBooking = () => {
   };
 
   const handleNext = () => {
-    // 🟢 Validation: Bina naam aur number ke aage nahi badhne denge
+    // 🟢 Validation: Bina naam, number aur time ke aage nahi badhne denge
     if (!pickup || !drop) {
       setError("Please enter both pickup and drop locations.");
       return;
@@ -93,6 +99,12 @@ const CreateBooking = () => {
     }
     if (customerPhone.length < 10) {
       setError("Please enter a valid 10-digit phone number.");
+      return;
+    }
+    
+    // Scheduled booking validation
+    if (bookingType === "scheduled" && (!scheduledDate || !scheduledTime)) {
+      setError("Please select both Date and Time for scheduled booking.");
       return;
     }
 
@@ -182,6 +194,59 @@ const CreateBooking = () => {
                   onChange={(e) => setUserEmail(e.target.value)}
                 />
               </div>
+            </div>
+
+            {/* --- NAYA SECTION: SCHEDULE DETAILS CARD --- */}
+            <div className="booking-card" style={{ marginTop: "20px" }}>
+              <h3 style={{ marginBottom: "15px", fontSize: "1.1rem", color: "#1e293b" }}>🕒 Booking Time</h3>
+              
+              <div style={{ display: 'flex', gap: '20px', marginBottom: '15px' }}>
+                <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input 
+                    type="radio" 
+                    value="instant" 
+                    checked={bookingType === "instant"} 
+                    onChange={() => setBookingType("instant")} 
+                  />
+                  Book Now (Instant)
+                </label>
+                
+                <label style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <input 
+                    type="radio" 
+                    value="scheduled" 
+                    checked={bookingType === "scheduled"} 
+                    onChange={() => setBookingType("scheduled")} 
+                  />
+                  Schedule for Later
+                </label>
+              </div>
+
+              {bookingType === "scheduled" && (
+                <div style={{ display: 'flex', gap: '15px' }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '5px', color: '#64748b' }}>Select Date *</label>
+                    <input 
+                      type="date" 
+                      value={scheduledDate} 
+                      min={today} 
+                      onChange={(e) => setScheduledDate(e.target.value)} 
+                      style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none' }}
+                      required 
+                    />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: 'block', fontSize: '0.9rem', marginBottom: '5px', color: '#64748b' }}>Select Time *</label>
+                    <input 
+                      type="time" 
+                      value={scheduledTime} 
+                      onChange={(e) => setScheduledTime(e.target.value)} 
+                      style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1', outline: 'none' }}
+                      required 
+                    />
+                  </div>
+                </div>
+              )}
             </div>
 
             {error && <div className="error-box" style={{ marginTop: "15px", color: "red", fontWeight: "500" }}>⚠️ {error}</div>}

@@ -9,6 +9,11 @@ export const BookingProvider = ({ children }) => {
   const [distance, setDistance] = useState(0);
   const [price, setPrice] = useState(0);
 
+  // 🟢 NAYE STATES: Scheduled Booking ke liye
+  const [bookingType, setBookingType] = useState("instant"); // 'instant' ya 'scheduled'
+  const [scheduledDate, setScheduledDate] = useState("");
+  const [scheduledTime, setScheduledTime] = useState("");
+
   // Customer Details States
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -20,6 +25,9 @@ export const BookingProvider = ({ children }) => {
     setVehicle(null);
     setDistance(0);
     setPrice(0);
+    setBookingType("instant"); // Reset
+    setScheduledDate("");      // Reset
+    setScheduledTime("");      // Reset
     setCustomerName("");
     setCustomerPhone("");
     setUserEmail("");
@@ -31,6 +39,9 @@ export const BookingProvider = ({ children }) => {
     vehicle,
     distance,
     price,
+    bookingType,      // Naya
+    scheduledDate,    // Naya
+    scheduledTime,    // Naya
     customerName,
     customerPhone,
     userEmail,
@@ -39,6 +50,9 @@ export const BookingProvider = ({ children }) => {
     setVehicle,
     setDistance,
     setPrice,
+    setBookingType,   // Naya
+    setScheduledDate, // Naya
+    setScheduledTime, // Naya
     setCustomerName,
     setCustomerPhone,
     setUserEmail,

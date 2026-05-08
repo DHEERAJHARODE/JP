@@ -6,7 +6,7 @@ import { createBooking } from "../../services/bookingService";
 import Button from "../../components/common/Button";
 
 const BookingSummary = () => {
-  // 🟢 Nayi details context se nikal li hain
+  // 🟢 Context se sabhi details nikal li hain
   const { 
     pickup, 
     drop, 
@@ -14,7 +14,10 @@ const BookingSummary = () => {
     distance,
     customerName,    
     customerPhone,   
-    userEmail        
+    userEmail,
+    bookingType,     // 🟢 Naya
+    scheduledDate,   // 🟢 Naya
+    scheduledTime    // 🟢 Naya
   } = useBookingContext();
   
   const { user } = useAuth();
@@ -35,19 +38,24 @@ const BookingSummary = () => {
 
     setLoading(true);
 
-    // 🟢 FIX: Database me bhejne ke liye naye fields add kar diye
+    // 🟢 100% WORKING PAYLOAD FOR FIRESTORE
     const bookingData = {
       pickup: pickup,
       drop: drop,
-      vehicleName: vehicle?.name,
+      vehicleName: vehicle?.name || "Unknown Vehicle",
       price: totalAmount,
       distance: distance,
       customerName: customerName || user.displayName || "User", 
       customerPhone: customerPhone, 
       userEmail: userEmail || user.email || "", 
-      createdAt: new Date().toISOString(), // Admin panel uses createdAt
+      createdAt: new Date().toISOString(), 
       userId: user.uid,
-      status: "Pending" // Initial status
+      status: "Pending", 
+      
+      // ✅ YE TEEN FIELDS AB DATABASE ME JAYENGE:
+      bookingType: bookingType || "instant",
+      scheduledDate: bookingType === "scheduled" ? scheduledDate : "", // Khali string bheji error se bachne ke liye
+      scheduledTime: bookingType === "scheduled" ? scheduledTime : "", 
     };
 
     try {
@@ -118,6 +126,21 @@ const BookingSummary = () => {
               </div>
             </div>
 
+            {/* 🟢 NAYA SCHEDULE CARD (UI ke liye) */}
+            <div className="card schedule-card">
+               <h3 className="card-title">Booking Timing</h3>
+               <div style={{ padding: '16px', backgroundColor: '#e0f2fe', borderRadius: '12px', border: '1px solid #bae6fd' }}>
+                 <p style={{ margin: 0, color: '#0369a1', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                   <span style={{ fontSize: '1.4rem' }}>{bookingType === 'instant' ? '⚡' : '📅'}</span>
+                   <strong style={{ fontSize: '1.05rem' }}>
+                     {bookingType === "instant" 
+                       ? "As soon as possible (Instant)" 
+                       : `Scheduled on ${scheduledDate} at ${scheduledTime}`}
+                   </strong>
+                 </p>
+               </div>
+            </div>
+
             {/* Vehicle Card */}
             <div className="card vehicle-card">
                <h3 className="card-title">Vehicle Selected</h3>
@@ -133,7 +156,7 @@ const BookingSummary = () => {
                </div>
             </div>
 
-            {/* 🟢 Customer Details Card (Naya UI Add kiya taki user ko summary me uski details dikh jaye) */}
+            {/* Customer Details Card */}
             <div className="card customer-card">
                <h3 className="card-title">Contact Information</h3>
                <div style={{ color: "#334155", fontSize: "0.95rem" }}>

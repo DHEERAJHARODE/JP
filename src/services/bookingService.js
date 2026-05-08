@@ -1,5 +1,5 @@
 import { db } from "./firebase"; 
-import { collection, addDoc, getDocs, updateDoc, doc, orderBy, query, where } from "firebase/firestore"; // 'where' add kiya hai
+import { collection, addDoc, getDocs, updateDoc, doc, orderBy, query, where } from "firebase/firestore";
 
 // 1️⃣ NAYI BOOKING BANANE KA FUNCTION 
 export const createBooking = async (bookingData) => {
@@ -15,7 +15,12 @@ export const createBooking = async (bookingData) => {
       createdAt: bookingData.createdAt || new Date().toISOString(),
       customerName: bookingData.customerName || "Unknown Customer",
       customerPhone: bookingData.customerPhone || "No Phone",
-      userEmail: bookingData.userEmail || "No Email"
+      userEmail: bookingData.userEmail || "No Email",
+      
+      // 🟢 FIX: Yahan in 3 fields ko add karna zaroori tha, varna DB mein save nahi honge!
+      bookingType: bookingData.bookingType || "instant",
+      scheduledDate: bookingData.scheduledDate || "",
+      scheduledTime: bookingData.scheduledTime || ""
     });
     
     return { id: docRef.id, error: null };
@@ -33,7 +38,7 @@ export const getAllBookings = async () => {
     
     const bookings = querySnapshot.docs.map(doc => ({
       id: doc.id,
-      ...doc.data()
+      ...doc.data() // Ye automatic naye fields ko bhi fetch kar lega
     }));
     
     return { bookings, error: null };
@@ -57,7 +62,7 @@ export const updateBookingStatus = async (bookingId, newStatus) => {
   }
 };
 
-// 4️⃣ USER DASHBOARD KE LIYE SIRF USKI BOOKINGS LAANE KA FUNCTION (Missing Function Added!)
+// 4️⃣ USER DASHBOARD KE LIYE SIRF USKI BOOKINGS LAANE KA FUNCTION
 export const getUserBookings = async (userId) => {
   try {
     // Sirf wahi bookings laao jinka userId match karta ho
