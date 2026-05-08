@@ -337,7 +337,7 @@ const Navbar = () => {
 // Sub-component to organize links
 const NavLinks = ({ user, isActive, handleLogout, isMobile = false }) => {
   // 🟢 Original styling wala Admin Email Logic
-  const ADMIN_EMAILS = ["admin@shipease.com", "dheerajharode704@gmail.com"];
+  const ADMIN_EMAILS = ["admin@shipease.com", "jayshrisonyy@gmail.com", "dheerajharode704@gmail.com"];
   const isAdmin = user && ADMIN_EMAILS.includes(user.email);
 
   return (

@@ -6,7 +6,7 @@ const Sidebar = () => {
   const { user } = useAuth(); // 🟢 Current user nikal liya
 
   // 🟢 Admin emails logic
-  const ADMIN_EMAILS = ["admin@shipease.com", "dheerajharode704@gmail.com"];
+  const ADMIN_EMAILS = ["admin@shipease.com","jayshrisonyy@gmail.com" ,"dheerajharode704@gmail.com"];
   const isAdmin = user && ADMIN_EMAILS.includes(user.email);
 
   return (

@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 // Yahan aap apne (owner ke) email daal sakte hain jo admin honge
-const ADMIN_EMAILS = ["admin@shipease.com", "dheerajharode704@gmail.com"]; 
+const ADMIN_EMAILS = ["admin@shipease.com", "jayshrisonyy@gmail.com", "dheerajharode704@gmail.com"]; 
 
 const AdminRoute = () => {
   const { user, loading } = useAuth();
